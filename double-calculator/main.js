@@ -67,7 +67,7 @@ class Calculator {
     }
 
     bindEvents() {
-        // Gestion du thème
+// Gestion du thème
         this.bindThemeEvents();
         
         // Gestion des modes
@@ -137,14 +137,14 @@ class Calculator {
     }
 
     bindStandardCalculatorEvents() {
-        // Sélection de l'opérateur
+// Sélection de l'opérateur
         this.operatorBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+    btn.addEventListener('click', () => {
                 this.selectedOperator = btn.dataset.op;
                 this.operatorBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
+        btn.classList.add('active');
+    });
+});
 
         // Clic sur "="
         if (this.equalsBtn) {
@@ -484,17 +484,17 @@ class Calculator {
     calculateStandard() {
         const op1 = parseFloat(this.operand1.value) || 0;
         const op2 = parseFloat(this.operand2.value) || 0;
-        let result;
+    let result;
 
         switch (this.selectedOperator) {
-            case '+': result = op1 + op2; break;
-            case '-': result = op1 - op2; break;
-            case '*': result = op1 * op2; break;
-            case '/': result = op2 !== 0 ? op1 / op2 : 'Erreur : division par 0'; break;
+        case '+': result = op1 + op2; break;
+        case '-': result = op1 - op2; break;
+        case '*': result = op1 * op2; break;
+        case '/': result = op2 !== 0 ? op1 / op2 : 'Erreur : division par 0'; break;
             case '^': result = Math.pow(op1, op2); break;
             case '√': result = Math.sqrt(op1); break;
-            default: result = op1 + op2;
-        }
+        default: result = op1 + op2;
+    }
 
         if (typeof result === 'number') {
             result = this.formatNumber(result);
@@ -672,16 +672,16 @@ class Calculator {
     handleKeyPress(key, input) {
         if (!key || !input) return;
 
-        if (key === 'C') {
-            input.value = '0';
+            if (key === 'C') {
+                input.value = '0';
             if (this.resultElt) this.resultElt.textContent = '0';
-            return;
-        }
+                return;
+            }
 
-        if (key === 'Del') {
-            input.value = input.value.length > 1 ? input.value.slice(0, -1) : '0';
-            return;
-        }
+            if (key === 'Del') {
+                input.value = input.value.length > 1 ? input.value.slice(0, -1) : '0';
+                return;
+            }
 
         if (key === '±') {
             input.value = input.value.startsWith('-') ? input.value.slice(1) : '-' + input.value;
@@ -696,10 +696,10 @@ class Calculator {
         if (key === '.' && input.value.includes('.')) return;
 
         if (input.value === '0' && key !== '.') {
-            input.value = key;
-        } else {
-            input.value += key;
-        }
+                input.value = key;
+            } else {
+                input.value += key;
+            }
     }
 
     handleScientificKeyPress(key) {
@@ -957,7 +957,7 @@ class Calculator {
 
     // Méthodes de sauvegarde/chargement
     saveState() {
-        const state = {
+    const state = {
             operand1: this.operand1?.value || '0',
             operand2: this.operand2?.value || '0',
             operator: this.selectedOperator,
@@ -965,14 +965,14 @@ class Calculator {
             timestamp: new Date().toISOString()
         };
         
-        localStorage.setItem('calculator-state', JSON.stringify(state));
+    localStorage.setItem('calculator-state', JSON.stringify(state));
         this.showNotification('État sauvegardé avec succès !');
     }
 
     loadState() {
-        const saved = localStorage.getItem('calculator-state');
-        if (saved) {
-            const state = JSON.parse(saved);
+    const saved = localStorage.getItem('calculator-state');
+    if (saved) {
+        const state = JSON.parse(saved);
             
             if (this.operand1) this.operand1.value = state.operand1 || '0';
             if (this.operand2) this.operand2.value = state.operand2 || '0';
@@ -984,7 +984,7 @@ class Calculator {
             
             this.calculateStandard();
             this.showNotification('État restauré avec succès !');
-        } else {
+            } else {
             this.showNotification('Aucune sauvegarde trouvée.');
         }
     }
@@ -1060,7 +1060,7 @@ class Calculator {
             recognition.onend = () => {
                 this.showNotification('Reconnaissance vocale terminée');
             };
-        } else {
+    } else {
             this.showNotification('Reconnaissance vocale non supportée par ce navigateur');
         }
     }
