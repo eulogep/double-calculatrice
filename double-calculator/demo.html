@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Démonstration - Calculatrice Pro ESIEA</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .demo-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .demo-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .demo-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .demo-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .tech-stack-demo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .tech-badge {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <header class="hero">
+            <div class="hero-content">
+                <h1>🧮 Calculatrice Pro ESIEA</h1>
+                <p>Démonstration des fonctionnalités avancées</p>
+                <p>Développée par Euloge Mabiala - Étudiant ESIEA</p>
+                <a href="index.html" class="demo-button">
+                    <i class="fas fa-calculator"></i>
+                    Tester la Calculatrice
+                </a>
+            </div>
+        </header>
+
+        <section class="demo-section">
+            <h2 class="demo-title">✨ Fonctionnalités Principales</h2>
+            <p class="demo-description">
+                Une calculatrice moderne avec 4 modes de calcul et des fonctionnalités avancées
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3 class="feature-title">Mode Standard</h3>
+                    <p class="feature-description">
+                        Calculatrice double avec deux opérandes indépendants. 
+                        Opérateurs avancés : +, -, ×, ÷, ^, √
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-square-root-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Mode Scientifique</h3>
+                    <p class="feature-description">
+                        Fonctions trigonométriques, logarithmiques, exponentielles.
+                        Constantes mathématiques π, e. Factorielle et valeur absolue.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Mode Financier</h3>
+                    <p class="feature-description">
+                        Calculs de valeur présente (PV), valeur future (FV), 
+                        paiements (PMT), taux d'intérêt et périodes.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Convertisseur</h3>
+                    <p class="feature-description">
+                        Conversion de longueur, poids, température, surface et volume.
+                        Interface intuitive avec échange d'unités.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2 class="demo-title">🎨 Interface Moderne</h2>
+            <p class="demo-description">
+                Design professionnel avec animations fluides et expérience utilisateur optimale
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Thème Sombre/Clair</h3>
+                    <p class="feature-description">
+                        Détection automatique du thème système. 
+                        Transition fluide entre les modes.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Responsive Design</h3>
+                    <p class="feature-description">
+                        Interface adaptée à tous les écrans. 
+                        Optimisée pour mobile, tablette et desktop.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="feature-title">Animations Fluides</h3>
+                    <p class="feature-description">
+                        Transitions CSS avancées. Effets de particules.
+                        Animations au survol et au clic.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3 class="feature-title">Raccourcis Clavier</h3>
+                    <p class="feature-description">
+                        Ctrl+H : Historique, Ctrl+S : Sauvegarder,
+                        Ctrl+D : Thème sombre, Ctrl+M : Mode scientifique.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2 class="demo-title">🚀 Fonctionnalités Avancées</h2>
+            <p class="demo-description">
+                Technologies de pointe intégrées pour une expérience exceptionnelle
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="feature-title">Historique Intelligent</h3>
+                    <p class="feature-description">
+                        Sauvegarde automatique des calculs. 
+                        Graphiques interactifs avec Chart.js.
+                        Export/Import des données.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3 class="feature-title">Commandes Vocales</h3>
+                    <p class="feature-description">
+                        Reconnaissance vocale intégrée.
+                        Commandes en français pour les calculs.
+                        Interface intuitive avec bouton vocal.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="feature-title">Statistiques Avancées</h3>
+                    <p class="feature-description">
+                        Suivi des calculs effectués.
+                        Opérateur le plus utilisé.
+                        Résultat moyen et tendances.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Partage & Export</h3>
+                    <p class="feature-description">
+                        Partage via Web APIs.
+                        Export JSON des données.
+                        Sauvegarde locale automatique.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2 class="demo-title">🛠️ Technologies Utilisées</h2>
+            <p class="demo-description">
+                Stack technologique moderne et professionnelle
+            </p>
+            
+            <div class="tech-stack-demo">
+                <span class="tech-badge">HTML5</span>
+                <span class="tech-badge">CSS3</span>
+                <span class="tech-badge">JavaScript ES6+</span>
+                <span class="tech-badge">Chart.js</span>
+                <span class="tech-badge">Particles.js</span>
+                <span class="tech-badge">Font Awesome</span>
+                <span class="tech-badge">LocalStorage</span>
+                <span class="tech-badge">Web APIs</span>
+                <span class="tech-badge">Responsive Design</span>
+                <span class="tech-badge">Progressive Web App</span>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2 class="demo-title">🎯 Points Forts pour les Recruteurs</h2>
+            <p class="demo-description">
+                Compétences techniques et soft skills démontrées
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Architecture Logicielle</h3>
+                    <p class="feature-description">
+                        Programmation orientée objet avec classes ES6.
+                        Gestion d'état centralisée et modulaire.
+                        Code propre et maintenable.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3 class="feature-title">Design & UX</h3>
+                    <p class="feature-description">
+                        Interface utilisateur de qualité professionnelle.
+                        Attention aux détails dans l'UX/UI.
+                        Animations et transitions fluides.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="feature-title">Innovation</h3>
+                    <p class="feature-description">
+                        Intégration de technologies émergentes.
+                        Commandes vocales et gestes.
+                        Fonctionnalités avancées uniques.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-title">Performance</h3>
+                    <p class="feature-description">
+                        Optimisation des animations CSS.
+                        Gestion mémoire efficace.
+                        Monitoring des performances en temps réel.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2 class="demo-title">📊 Fonctionnalités Techniques</h2>
+            <p class="demo-description">
+                Détails techniques et architecture du projet
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Sécurité</h3>
+                    <p class="feature-description">
+                        Validation des entrées utilisateur.
+                        Sanitisation des données.
+                        Protection XSS native.
+                        Gestion d'erreurs robuste.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="feature-title">Persistance</h3>
+                    <p class="feature-description">
+                        LocalStorage pour la sauvegarde.
+                        Export/Import JSON.
+                        Historique persistant.
+                        Paramètres personnalisables.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile"></i>
+                    </div>
+                    <h3 class="feature-title">Accessibilité</h3>
+                    <p class="feature-description">
+                        Support des lecteurs d'écran.
+                        Navigation au clavier.
+                        Contraste et lisibilité.
+                        WCAG 2.1 compliant.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="feature-title">Configuration</h3>
+                    <p class="feature-description">
+                        Paramètres personnalisables.
+                        Thèmes personnalisés.
+                        Précision décimale ajustable.
+                        Animations configurables.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2 class="demo-title">🚀 Prêt à Tester ?</h2>
+            <p class="demo-description">
+                Découvrez toutes les fonctionnalités de la calculatrice professionnelle
+            </p>
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="demo-button" style="font-size: 1.2rem; padding: 1.5rem 3rem;">
+                    <i class="fas fa-play"></i>
+                    Lancer la Calculatrice
+                </a>
+                
+                <p style="margin-top: 2rem; color: var(--text-secondary);">
+                    <strong>Raccourcis utiles :</strong><br>
+                    Ctrl+H : Historique | Ctrl+S : Sauvegarder | Ctrl+D : Thème sombre<br>
+                    Ctrl+M : Mode scientifique | Ctrl+F : Mode financier | Ctrl+C : Convertisseur
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Animation au scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+                }
+            });
+        });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Ajouter des styles d'animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .feature-card {
+                opacity: 0;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

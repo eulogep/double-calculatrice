@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Calculatrice Pro ESIEA - Euloge Mabiala</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" type="module" defer></script>
+    <script src="advanced-features.js" defer></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+</head>
+
+<body>
+    <!-- Particules personnalisées inspirées d'uiverse.io -->
+    <div id="custom-particles"></div>
+    
+    <!-- Effet de néon pour le fond -->
+    <div id="neon-background"></div>
+    
+    <!-- Effet de grille cyberpunk -->
+    <div id="cyber-grid"></div>
+    
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="logo-esiea.png" alt="ESIEA" class="nav-logo">
+            <span>Calculatrice Pro</span>
+        </div>
+        <div class="nav-controls">
+            <button id="theme-toggle" class="theme-btn">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="settings-btn" class="settings-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Calculatrice Professionnelle</h1>
+            <p>Développée par Euloge Mabiala - Étudiant ESIEA</p>
+            <div class="tech-stack">
+                <span class="tech-tag">HTML5</span>
+                <span class="tech-tag">CSS3</span>
+                <span class="tech-tag">JavaScript ES6+</span>
+                <span class="tech-tag">Chart.js</span>
+                <span class="tech-tag">Responsive Design</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+        <button class="mode-btn active" data-mode="standard">
+            <i class="fas fa-calculator"></i>
+            Standard
+        </button>
+        <button class="mode-btn" data-mode="scientific">
+            <i class="fas fa-square-root-alt"></i>
+            Scientifique
+        </button>
+        <button class="mode-btn" data-mode="financial">
+            <i class="fas fa-chart-line"></i>
+            Financière
+        </button>
+        <button class="mode-btn" data-mode="converter">
+            <i class="fas fa-exchange-alt"></i>
+            Convertisseur
+        </button>
+    </div>
+
+    <!-- Main Calculator -->
+    <main class="calculator-container">
+        <!-- Standard Mode -->
+        <div class="calculator-mode active" id="standard-mode">
+            <div class="calculators-wrapper">
+                <!-- Calculator 1 -->
+                <section class="calculator" id="calc1">
+                    <div class="calc-header">
+                        <h3>Opérande 1</h3>
+                        <div class="calc-display">
+                            <input class="operand operand1" readonly value="0" />
+                            <div class="calc-history"></div>
+                        </div>
+                    </div>
+                    <div class="keypad">
+                        <button class="key function" data-key="C">C</button>
+                        <button class="key function" data-key="Del">⌫</button>
+                        <button class="key function" data-key="±">±</button>
+                        <button class="key" data-key="7">7</button>
+                        <button class="key" data-key="8">8</button>
+                        <button class="key" data-key="9">9</button>
+                        <button class="key" data-key="4">4</button>
+                        <button class="key" data-key="5">5</button>
+                        <button class="key" data-key="6">6</button>
+                        <button class="key" data-key="1">1</button>
+                        <button class="key" data-key="2">2</button>
+                        <button class="key" data-key="3">3</button>
+                        <button class="key" data-key="0">0</button>
+                        <button class="key" data-key=".">.</button>
+                        <button class="key function" data-key="%">%</button>
+                    </div>
+                </section>
+
+                <!-- Operator Panel -->
+                <section class="operator-panel">
+                    <div class="operators">
+                        <button class="op-btn" data-op="+">+</button>
+                        <button class="op-btn" data-op="-">−</button>
+                        <button class="op-btn" data-op="*">×</button>
+                        <button class="op-btn" data-op="/">÷</button>
+                        <button class="op-btn" data-op="^">^</button>
+                        <button class="op-btn" data-op="√">√</button>
+                    </div>
+                    <button id="equals" class="equals">=</button>
+                    <div class="result-container">
+                        <output id="result" class="result">0</output>
+                        <div class="result-history"></div>
+                    </div>
+                </section>
+
+                <!-- Calculator 2 -->
+                <section class="calculator" id="calc2">
+                    <div class="calc-header">
+                        <h3>Opérande 2</h3>
+                        <div class="calc-display">
+                            <input class="operand operand2" readonly value="0" />
+                            <div class="calc-history"></div>
+                        </div>
+                    </div>
+                    <div class="keypad">
+                        <button class="key function" data-key="C">C</button>
+                        <button class="key function" data-key="Del">⌫</button>
+                        <button class="key function" data-key="±">±</button>
+                        <button class="key" data-key="7">7</button>
+                        <button class="key" data-key="8">8</button>
+                        <button class="key" data-key="9">9</button>
+                        <button class="key" data-key="4">4</button>
+                        <button class="key" data-key="5">5</button>
+                        <button class="key" data-key="6">6</button>
+                        <button class="key" data-key="1">1</button>
+                        <button class="key" data-key="2">2</button>
+                        <button class="key" data-key="3">3</button>
+                        <button class="key" data-key="0">0</button>
+                        <button class="key" data-key=".">.</button>
+                        <button class="key function" data-key="%">%</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Scientific Mode -->
+        <div class="calculator-mode" id="scientific-mode">
+            <div class="scientific-calculator">
+                <div class="sci-display">
+                    <input class="sci-input" readonly value="0" />
+                    <div class="sci-expression"></div>
+                </div>
+                <div class="sci-keypad">
+                    <button class="sci-btn function" data-func="sin">sin</button>
+                    <button class="sci-btn function" data-func="cos">cos</button>
+                    <button class="sci-btn function" data-func="tan">tan</button>
+                    <button class="sci-btn function" data-func="asin">asin</button>
+                    <button class="sci-btn function" data-func="acos">acos</button>
+                    <button class="sci-btn function" data-func="atan">atan</button>
+                    <button class="sci-btn function" data-func="log">log</button>
+                    <button class="sci-btn function" data-func="ln">ln</button>
+                    <button class="sci-btn function" data-func="exp">exp</button>
+                    <button class="sci-btn function" data-func="sqrt">√</button>
+                    <button class="sci-btn function" data-func="pow">x^y</button>
+                    <button class="sci-btn function" data-func="fact">x!</button>
+                    <button class="sci-btn function" data-func="pi">π</button>
+                    <button class="sci-btn function" data-func="e">e</button>
+                    <button class="sci-btn function" data-func="abs">|x|</button>
+                    <button class="sci-btn function" data-func="floor">⌊x⌋</button>
+                    <button class="sci-btn function" data-func="ceil">⌈x⌉</button>
+                    <button class="sci-btn function" data-func="round">round</button>
+                    <button class="sci-btn" data-key="7">7</button>
+                    <button class="sci-btn" data-key="8">8</button>
+                    <button class="sci-btn" data-key="9">9</button>
+                    <button class="sci-btn" data-key="4">4</button>
+                    <button class="sci-btn" data-key="5">5</button>
+                    <button class="sci-btn" data-key="6">6</button>
+                    <button class="sci-btn" data-key="1">1</button>
+                    <button class="sci-btn" data-key="2">2</button>
+                    <button class="sci-btn" data-key="3">3</button>
+                    <button class="sci-btn" data-key="0">0</button>
+                    <button class="sci-btn" data-key=".">.</button>
+                    <button class="sci-btn function" data-func="clear">C</button>
+                    <button class="sci-btn function" data-func="equals">=</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Mode -->
+        <div class="calculator-mode" id="financial-mode">
+            <div class="financial-calculator">
+                <div class="fin-display">
+                    <input class="fin-input" readonly value="0" />
+                </div>
+                <div class="fin-functions">
+                    <button class="fin-btn" data-func="pv">Valeur Présente</button>
+                    <button class="fin-btn" data-func="fv">Valeur Future</button>
+                    <button class="fin-btn" data-func="pmt">Paiement</button>
+                    <button class="fin-btn" data-func="rate">Taux</button>
+                    <button class="fin-btn" data-func="nper">Périodes</button>
+                    <button class="fin-btn" data-func="irr">TRI</button>
+                    <button class="fin-btn" data-func="npv">VAN</button>
+                    <button class="fin-btn" data-func="roi">ROI</button>
+                    <button class="fin-btn" data-func="compound">Intérêts Composés</button>
+                    <button class="fin-btn" data-func="simple">Intérêts Simples</button>
+                </div>
+                <div class="fin-inputs">
+                    <div class="fin-input-group">
+                        <label>Capital Initial</label>
+                        <input type="number" id="pv-input" placeholder="0">
+                    </div>
+                    <div class="fin-input-group">
+                        <label>Taux Annuel (%)</label>
+                        <input type="number" id="rate-input" placeholder="0">
+                    </div>
+                    <div class="fin-input-group">
+                        <label>Périodes</label>
+                        <input type="number" id="nper-input" placeholder="0">
+                    </div>
+                    <div class="fin-input-group">
+                        <label>Paiement</label>
+                        <input type="number" id="pmt-input" placeholder="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Converter Mode -->
+        <div class="calculator-mode" id="converter-mode">
+            <div class="converter-calculator">
+                <div class="converter-selector">
+                    <select id="conversion-type">
+                        <option value="length">Longueur</option>
+                        <option value="weight">Poids</option>
+                        <option value="temperature">Température</option>
+                        <option value="currency">Devise</option>
+                        <option value="area">Surface</option>
+                        <option value="volume">Volume</option>
+                    </select>
+                </div>
+                <div class="converter-inputs">
+                    <div class="conv-input-group">
+                        <input type="number" id="from-value" placeholder="0">
+                        <select id="from-unit"></select>
+                    </div>
+                    <div class="conv-swap">
+                        <button id="swap-btn"><i class="fas fa-exchange-alt"></i></button>
+                    </div>
+                    <div class="conv-input-group">
+                        <input type="number" id="to-value" placeholder="0" readonly>
+                        <select id="to-unit"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- History Panel -->
+    <aside class="history-panel">
+        <div class="history-header">
+            <h3><i class="fas fa-history"></i> Historique</h3>
+            <button id="clear-history"><i class="fas fa-trash"></i></button>
+        </div>
+        <div class="history-list"></div>
+        <div class="history-chart">
+            <canvas id="history-chart"></canvas>
+        </div>
+    </aside>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Paramètres</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label>Thème</label>
+                    <select id="theme-selector">
+                        <option value="auto">Automatique</option>
+                        <option value="light">Clair</option>
+                        <option value="dark">Sombre</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Précision décimale</label>
+                    <input type="number" id="decimal-precision" min="0" max="10" value="2">
+                </div>
+                <div class="setting-group">
+                    <label>Animation</label>
+                    <input type="checkbox" id="animations-enabled" checked>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button id="save-btn" class="action-btn">
+            <i class="fas fa-save"></i>
+            Sauvegarder
+        </button>
+        <button id="load-btn" class="action-btn">
+            <i class="fas fa-upload"></i>
+            Charger
+        </button>
+        <button id="export-btn" class="action-btn">
+            <i class="fas fa-download"></i>
+            Exporter
+        </button>
+        <button id="share-btn" class="action-btn">
+            <i class="fas fa-share"></i>
+            Partager
+        </button>
+        <button id="stats-btn" class="action-btn">
+            <i class="fas fa-chart-bar"></i>
+            Statistiques
+        </button>
+        <button id="voice-btn" class="action-btn">
+            <i class="fas fa-microphone"></i>
+            Voix
+        </button>
+        <button id="help-btn" class="action-btn">
+            <i class="fas fa-question-circle"></i>
+            Aide
+        </button>
+        <button id="demo-btn" class="action-btn">
+            <i class="fas fa-play"></i>
+            Démo
+        </button>
+    </div>
+
+    <!-- Particles Configuration -->
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 }},
+                color: { value: "#3b82f6" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true, distance: 150, color: "#3b82f6", opacity: 0.4, width: 1
+                },
+                move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+</html>
