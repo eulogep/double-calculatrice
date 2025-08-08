@@ -1,0 +1,70 @@
+# Configuration GitHub Pages
+title: Calculatrice Pro ESIEA - Euloge Mabiala
+description: Application web moderne et professionnelle développée avec les dernières technologies
+author: Euloge Junior Mabiala
+email: mabiala@et.esiea.fr
+
+# Configuration du site
+url: "https://eulogep.github.io"
+baseurl: "/double-calculatrice"
+
+# Configuration des plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Configuration des métadonnées
+lang: fr
+locale: fr_FR
+
+# Configuration des liens
+links:
+  - title: GitHub
+    url: https://github.com/eulogep
+  - title: LinkedIn
+    url: https://www.linkedin.com/in/euloge-junior-mabiala
+  - title: Email
+    url: mailto:mabiala@et.esiea.fr
+
+# Configuration des réseaux sociaux
+social:
+  name: Euloge Junior Mabiala
+  links:
+    - https://github.com/eulogep
+    - https://www.linkedin.com/in/euloge-junior-mabiala
+
+# Configuration des analytics (optionnel)
+# google_analytics: UA-XXXXXXXXX-X
+
+# Configuration des commentaires (optionnel)
+# disqus:
+#   shortname: your-disqus-shortname
+
+# Configuration des partages sociaux
+share:
+  twitter: true
+  facebook: true
+  linkedin: true
+
+# Configuration des métadonnées Open Graph
+og_image: /logo-esiea.png
+og_image_width: 1200
+og_image_height: 630
+
+# Configuration des métadonnées Twitter Card
+twitter_card: summary_large_image
+twitter_username: eulogep
+
+# Configuration des métadonnées pour les moteurs de recherche
+search_engine_optimization:
+  title: Calculatrice Pro ESIEA - Euloge Mabiala
+  description: Application web moderne et professionnelle développée avec les dernières technologies pour impressionner les recruteurs
+  keywords:
+    - calculatrice
+    - web
+    - javascript
+    - esiea
+    - euloge mabiala
+    - développement
+    - alternance
+    - recrutement

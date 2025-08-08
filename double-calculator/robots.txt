@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://eulogep.github.io/double-calculatrice/sitemap.xml
+
+# Pages importantes
+Allow: /index.html
+Allow: /demo.html
+Allow: /README.md
+Allow: /CONTACT.md
+Allow: /RECRUITER_PRESENTATION.md
+
+# Ressources
+Allow: /style.css
+Allow: /main.js
+Allow: /advanced-features.js
+Allow: /logo-esiea.png
+
+# Fichiers de configuration
+Disallow: /_config.yml
+Disallow: /.git/
+Disallow: /.github/

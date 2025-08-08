@@ -70,9 +70,17 @@ Cette calculatrice professionnelle a été développée pour démontrer des comp
 
 ---
 
-## 🎮 Démonstration
+## �� Démonstration
 
-### 🚀 Démarrage Rapide
+### 🌐 Version Live - GitHub Pages
+**🚀 Application en ligne :** [https://eulogep.github.io/double-calculatrice/](https://eulogep.github.io/double-calculatrice/)
+
+L'application est maintenant déployée sur GitHub Pages et accessible en ligne ! Vous pouvez :
+- **Tester l'application** directement dans votre navigateur
+- **Partager le lien** avec les recruteurs
+- **Démontrer vos compétences** en temps réel
+
+### 🚀 Démarrage Rapide Local
 ```bash
 # Cloner le repository
 git clone https://github.com/eulogep/double-calculatrice.git
