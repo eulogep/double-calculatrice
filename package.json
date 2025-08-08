@@ -1,0 +1,12 @@
+{
+  "name": "double-calculatrice",
+  "version": "1.0.0",
+  "description": "Double calculator web app",
+  "main": "main.js",
+  "scripts": {
+    "start": "echo 'No server script'",
+    "build": "echo 'No build step'"
+  },
+  "author": "",
+  "license": "MIT"
+}
