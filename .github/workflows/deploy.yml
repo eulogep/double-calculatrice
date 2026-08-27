@@ -26,13 +26,16 @@ jobs:
             - name: Récupérer le dépôt
               uses: actions/checkout@v4
 
+            - name: Configurer Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - name: Générer l’artefact statique optimisé
+              run: npm run build
+
             - name: Configurer GitHub Pages
               uses: actions/configure-pages@v5
-
-            - name: Préparer l’artefact statique
-              run: |
-                  mkdir -p _site
-                  cp index.html 404.html demo.html main.js advanced-features.js scientific.mjs style.css logo-esiea.png robots.txt sitemap.xml CNAME _site/
 
             - name: Charger l’artefact Pages
               uses: actions/upload-pages-artifact@v3

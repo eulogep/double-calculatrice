@@ -37,6 +37,9 @@ jobs:
             - name: Vérifier la qualité du code
               run: npm run lint
 
+            - name: Générer les assets optimisés
+              run: npm run build
+
             - name: Exécuter les tests unitaires
               run: npm test -- --coverage
 

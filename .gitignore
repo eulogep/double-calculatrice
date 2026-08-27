@@ -203,3 +203,6 @@ test-results/
 
 # Lighthouse CI reports
 .lighthouseci/
+
+# Static build output
+_site/

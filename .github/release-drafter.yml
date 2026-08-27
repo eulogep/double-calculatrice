@@ -1,0 +1,78 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+change-template: '- $TITLE (#$NUMBER) — @$AUTHOR'
+change-title-escapes: '\<*_&'
+
+categories:
+    - title: 'Fonctionnalités'
+      semver-increment: minor
+      when:
+          labels:
+              - feature
+              - enhancement
+    - title: 'Corrections'
+      semver-increment: patch
+      when:
+          labels:
+              - fix
+              - bug
+    - title: 'Performances'
+      semver-increment: patch
+      when:
+          label: performance
+    - title: 'Qualité et tests'
+      semver-increment: patch
+      when:
+          labels:
+              - tests
+              - quality
+    - title: 'Documentation'
+      when:
+          label: documentation
+    - title: 'Dépendances'
+      collapse-after: 3
+      when:
+          label: dependencies
+    - title: 'Maintenance'
+      when:
+          label: chore
+    - type: pre-exclude
+      when:
+          label: skip-changelog
+    - type: version-resolver
+      semver-increment: major
+      when:
+          label: major
+    - type: version-resolver
+      semver-increment: patch
+
+template: |
+    ## Changements
+
+    $CHANGES
+
+autolabeler:
+    - label: feature
+      title:
+          - '/^feat(\(.+\))?!?:/i'
+    - label: fix
+      title:
+          - '/^fix(\(.+\))?!?:/i'
+    - label: performance
+      title:
+          - '/^perf(\(.+\))?!?:/i'
+    - label: tests
+      title:
+          - '/^test(\(.+\))?!?:/i'
+    - label: documentation
+      title:
+          - '/^docs(\(.+\))?!?:/i'
+    - label: chore
+      title:
+          - '/^chore(\(.+\))?!?:/i'
+    - label: dependencies
+      branch:
+          - '/dependabot\/.+/'
+    - label: major
+      title:
+          - '/^[a-z]+(\(.+\))?!:/i'

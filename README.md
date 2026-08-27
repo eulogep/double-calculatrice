@@ -415,3 +415,18 @@ Les variables `LOAD_TEST_ITERATIONS` et `LOAD_TEST_MAX_MS` permettent d’augmen
 ## Surveillance des dépendances
 
 Dependabot vérifie chaque semaine les dépendances npm et les GitHub Actions déclarées dans le dépôt. Les propositions de mise à jour sont étiquetées selon leur catégorie et utilisent des messages de commit compatibles avec la convention de release. La configuration se trouve dans `.github/dependabot.yml`, et les alertes de sécurité sont accessibles depuis le badge Dependabot en tête de ce document.
+
+
+## Qualité de code SonarQube Cloud
+
+Le workflow `.github/workflows/sonarcloud.yml` exécute l’analyse SonarQube Cloud sur chaque push et chaque pull request. Il exploite la couverture Jest disponible dans `coverage/lcov.info` et attend le résultat du Quality Gate.
+
+Pour activer l’envoi des résultats, importez ce dépôt dans SonarQube Cloud, vérifiez au besoin les valeurs de `sonar.organization` et `sonar.projectKey` dans `sonar-project.properties`, puis ajoutez un secret GitHub nommé `SONAR_TOKEN`. Tant que ce secret n’est pas renseigné, le workflow reste vert et affiche uniquement l’instruction d’activation.
+
+## Versions et changelog issus des pull requests
+
+Release Drafter étiquette automatiquement les pull requests selon leur titre conventionnel (`feat:`, `fix:`, `perf:`, `test:`, `docs:` ou `chore:`) et actualise un brouillon de release après chaque fusion sur `main`. Les catégories et l’incrément de version sont définis dans `.github/release-drafter.yml`. Ce brouillon complète Semantic Release, qui publie les releases finales à partir des commits conventionnels.
+
+## Chargement et compression des assets
+
+Le chargement initial diffère désormais Chart.js jusqu’à l’ouverture de l’historique, et particles.js est chargé lorsque le navigateur est disponible afin de ne pas bloquer le rendu. Le logo de navigation utilise WebP avec dimensions explicites. La commande `npm run build` prépare `_site/` et ses variantes gzip ; le conteneur Nginx sert ces variantes lorsqu’elles sont acceptées par le navigateur.

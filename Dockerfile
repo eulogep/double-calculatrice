@@ -1,10 +1,17 @@
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY scripts/build-static.mjs ./scripts/build-static.mjs
+COPY index.html 404.html demo.html main.js advanced-features.js scientific.mjs style.css ./
+COPY logo-esiea.png logo-esiea.webp robots.txt sitemap.xml CNAME ./
+
+RUN node scripts/build-static.mjs
+
 FROM nginx:1.27-alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-COPY index.html 404.html demo.html /usr/share/nginx/html/
-COPY main.js advanced-features.js scientific.mjs style.css /usr/share/nginx/html/
-COPY logo-esiea.png robots.txt sitemap.xml CNAME /usr/share/nginx/html/
+COPY --from=build /app/_site /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -19,7 +19,6 @@ class Calculator {
         this.initializeElements();
         this.bindEvents();
         this.loadSettings();
-        this.initializeChart();
         this.loadHistory();
     }
 
@@ -1031,14 +1030,35 @@ class Calculator {
 
     toggleHistory() {
         if (this.historyPanel) {
-            this.historyPanel.classList.toggle('show');
+            const isHistoryVisible = this.historyPanel.classList.toggle('show');
+            if (isHistoryVisible) this.initializeChart();
         }
     }
 
     // Méthodes de graphiques
-    initializeChart() {
-        if (!this.historyChart || typeof Chart === 'undefined') return;
+    async initializeChart() {
+        if (!this.historyChart || this.chart) return;
 
+        if (!this.chartLibraryPromise) {
+            this.chartLibraryPromise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
+                script.async = true;
+                script.dataset.library = 'chartjs';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Impossible de charger Chart.js'));
+                document.head.append(script);
+            });
+        }
+
+        try {
+            await this.chartLibraryPromise;
+        } catch (error) {
+            console.warn(error.message);
+            return;
+        }
+
+        if (typeof Chart === 'undefined') return;
         const ctx = this.historyChart.getContext('2d');
         this.chart = new Chart(ctx, {
             type: 'line',
@@ -1069,6 +1089,7 @@ class Calculator {
                 }
             }
         });
+        this.updateHistoryChart();
     }
 
     updateHistoryChart() {
