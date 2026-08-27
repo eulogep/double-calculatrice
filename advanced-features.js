@@ -285,7 +285,7 @@ class StatisticsFeatures {
         // Trouver l'opérateur le plus utilisé
         const operatorCount = {};
         this.stats.calculationHistory.forEach(calc => {
-            const operator = calc.expression.match(/[\+\-\*\/\^]/)?.[0];
+            const operator = calc.expression.match(new RegExp('[+*/^-]'))?.[0];
             if (operator) {
                 operatorCount[operator] = (operatorCount[operator] || 0) + 1;
             }

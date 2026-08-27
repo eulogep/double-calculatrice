@@ -543,7 +543,7 @@ class Calculator {
             this.sciInput.value = this.sciResult;
             this.sciExpression = String(this.sciResult);
             this.addToHistory(`Sci: ${expression} = ${this.sciResult}`);
-        } catch (error) {
+        } catch {
             this.sciInput.value = 'Erreur';
             this.sciExpression = '';
             this.showNotification('Expression scientifique invalide.');
@@ -1057,7 +1057,7 @@ class Calculator {
             this.switchMode(state.mode || 'standard');
             this.calculateStandard();
             this.showNotification('État restauré avec succès !');
-        } catch (error) {
+        } catch {
             this.showNotification('La sauvegarde est illisible.');
         }
     }
@@ -1073,7 +1073,7 @@ class Calculator {
         try {
             const parsedHistory = JSON.parse(saved);
             this.history = Array.isArray(parsedHistory) ? parsedHistory.slice(0, CONFIG.maxHistoryItems) : [];
-        } catch (error) {
+        } catch {
             this.history = [];
             localStorage.removeItem('calculator-history');
         }

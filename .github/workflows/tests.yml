@@ -30,5 +30,8 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
+      - name: Vérifier la qualité du code
+        run: npm run lint
+
       - name: Exécuter les tests unitaires
         run: npm test -- --coverage

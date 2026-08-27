@@ -7,11 +7,15 @@
     "start": "echo 'No server script'",
     "build": "echo 'No build step'",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
-    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "lint": "eslint . --ext .js,.mjs --max-warnings 0"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1",
+    "globals": "^17.11.0",
     "jest": "^30.4.2"
   }
 }
