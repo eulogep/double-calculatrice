@@ -396,7 +396,7 @@ Chaque push sur `main` déclenche également `.github/workflows/deploy.yml`, qui
 
 ## Audits de performance et d’accessibilité
 
-Lighthouse CI audite automatiquement la page d’accueil dans Chromium. L’audit impose un score d’accessibilité minimal de 90/100 et signale toute baisse sous 70/100 en performance. Les rapports sont conservés quatorze jours dans les artefacts du workflow GitHub Actions.
+Le CLI officiel Lighthouse audite automatiquement la page d’accueil dans Chromium. L’exécuteur `scripts/run-lighthouse.mjs` produit les rapports JSON et HTML, impose un score d’accessibilité minimal de 90/100 et signale toute baisse sous 65/100 en performance. Les rapports sont archivés quatorze jours dans les artefacts du workflow GitHub Actions, sous le nom `lighthouse-reports`.
 
 ```bash
 npm run test:lighthouse

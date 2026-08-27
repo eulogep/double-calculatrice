@@ -201,8 +201,8 @@ out/
 playwright-report/
 test-results/
 
-# Lighthouse CI reports
-.lighthouseci/
+# Lighthouse reports
+lighthouse-reports/
 
 # Static build output
 _site/

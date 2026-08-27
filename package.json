@@ -9,11 +9,11 @@
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --testPathIgnorePatterns=tests/e2e",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch --testPathIgnorePatterns=tests/e2e",
         "lint": "eslint . --ext .js,.mjs,.cjs --max-warnings 0",
-        "format": "prettier --write index.html main.js advanced-features.js scientific.mjs tests/scientific.test.mjs tests/e2e/*.mjs tests/load/*.mjs scripts/*.mjs eslint.config.mjs playwright.config.mjs release.config.cjs lighthouserc.cjs package.json .github/workflows/*.yml .github/release-drafter.yml .github/dependabot.yml",
-        "format:check": "prettier --check index.html main.js advanced-features.js scientific.mjs tests/scientific.test.mjs tests/e2e/*.mjs tests/load/*.mjs scripts/*.mjs eslint.config.mjs playwright.config.mjs release.config.cjs lighthouserc.cjs package.json .github/workflows/*.yml .github/release-drafter.yml .github/dependabot.yml",
+        "format": "prettier --write index.html main.js advanced-features.js scientific.mjs tests/scientific.test.mjs tests/e2e/*.mjs tests/load/*.mjs scripts/*.mjs eslint.config.mjs playwright.config.mjs release.config.cjs package.json .github/workflows/*.yml .github/release-drafter.yml .github/dependabot.yml",
+        "format:check": "prettier --check index.html main.js advanced-features.js scientific.mjs tests/scientific.test.mjs tests/e2e/*.mjs tests/load/*.mjs scripts/*.mjs eslint.config.mjs playwright.config.mjs release.config.cjs package.json .github/workflows/*.yml .github/release-drafter.yml .github/dependabot.yml",
         "test:e2e": "playwright test",
         "test:e2e:ui": "playwright test --ui",
-        "test:lighthouse": "lhci autorun",
+        "test:lighthouse": "node scripts/run-lighthouse.mjs",
         "test:load": "node tests/load/scientific-load.mjs",
         "refactor:sonar:js:check": "node scripts/refactor-sonar-js.mjs --check",
         "refactor:sonar:js": "node scripts/refactor-sonar-js.mjs --apply"
@@ -22,7 +22,7 @@
     "license": "MIT",
     "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "@lhci/cli": "^0.15.1",
+        "lighthouse": "^13.4.1",
         "@playwright/test": "^1.62.1",
         "@semantic-release/commit-analyzer": "^13.0.1",
         "@semantic-release/github": "^12.0.9",
