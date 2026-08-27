@@ -1,4 +1,6 @@
 // Configuration globale
+import { evaluateScientificExpression, factorial } from './scientific.mjs';
+
 const CONFIG = {
     decimalPrecision: 2,
     animationsEnabled: true,
@@ -534,7 +536,7 @@ class Calculator {
         const expression = this.sciExpression.replace(/×/g, '*').replace(/÷/g, '/').trim();
 
         try {
-            const result = this.evaluateScientificExpression(expression);
+            const result = evaluateScientificExpression(expression);
             if (!Number.isFinite(result)) throw new Error('Résultat invalide');
 
             this.sciResult = this.formatNumber(result);
@@ -546,77 +548,6 @@ class Calculator {
             this.sciExpression = '';
             this.showNotification('Expression scientifique invalide.');
         }
-    }
-
-    evaluateScientificExpression(expression) {
-        if (!expression || !/^[0-9+\-*/^().\s]+$/.test(expression)) {
-            throw new Error('Expression non autorisée');
-        }
-
-        const tokens = expression.replace(/\s+/g, '').match(/(?:\d+(?:\.\d*)?|\.\d+|[()+\-*/^])/g);
-        const normalizedExpression = expression.replace(/\s+/g, '');
-        if (!tokens || tokens.join('') !== normalizedExpression) {
-            throw new Error('Expression invalide');
-        }
-
-        let position = 0;
-        const peek = () => tokens[position];
-        const consume = () => tokens[position++];
-
-        const parsePrimary = () => {
-            const token = peek();
-            if (token === '+') {
-                consume();
-                return parsePrimary();
-            }
-            if (token === '-') {
-                consume();
-                return -parsePrimary();
-            }
-            if (token === '(') {
-                consume();
-                const value = parseExpression();
-                if (consume() !== ')') throw new Error('Parenthèse manquante');
-                return value;
-            }
-            if (!token || !/^\d|^\.\d/.test(token)) throw new Error('Nombre attendu');
-            consume();
-            return Number(token);
-        };
-
-        const parsePower = () => {
-            const base = parsePrimary();
-            if (peek() === '^') {
-                consume();
-                return Math.pow(base, parsePower());
-            }
-            return base;
-        };
-
-        const parseTerm = () => {
-            let value = parsePower();
-            while (peek() === '*' || peek() === '/') {
-                const operator = consume();
-                const right = parsePower();
-                if (operator === '/' && right === 0) throw new Error('Division par zéro');
-                value = operator === '*' ? value * right : value / right;
-            }
-            return value;
-        };
-
-        const parseExpression = () => {
-            let value = parseTerm();
-            while (peek() === '+' || peek() === '-') {
-                const operator = consume();
-                const right = parseTerm();
-                value = operator === '+' ? value + right : value - right;
-            }
-            return value;
-        };
-
-        const result = parseExpression();
-        if (position !== tokens.length) throw new Error('Expression incomplète');
-        return result;
     }
 
     calculateFinancial(func) {
@@ -843,7 +774,7 @@ class Calculator {
             case 'exp': result = Math.exp(value); break;
             case 'sqrt': result = Math.sqrt(value); break;
             case 'abs': result = Math.abs(value); break;
-            case 'fact': result = this.factorial(value); break;
+            case 'fact': result = factorial(value); break;
             case 'pi': result = Math.PI; break;
             case 'e': result = Math.E; break;
             case 'floor': result = Math.floor(value); break;
@@ -870,16 +801,6 @@ class Calculator {
 
         this.sciInput.value = this.formatNumber(result);
         this.sciExpression = this.sciInput.value;
-    }
-
-    factorial(n) {
-        if (!Number.isInteger(n) || n < 0 || n > 170) return NaN;
-        if (n === 0 || n === 1) return 1;
-        let result = 1;
-        for (let i = 2; i <= n; i++) {
-            result *= i;
-        }
-        return result;
     }
 
     // Méthodes d'affichage

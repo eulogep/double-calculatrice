@@ -338,3 +338,15 @@ Cette calculatrice professionnelle démontre :
 ---
 
 *Développé avec ❤️ par Euloge Mabiala - Étudiant ESIEA*
+
+
+## Tests automatisés
+
+La logique du module scientifique est isolée dans `scientific.mjs` afin d’être testée sans dépendre du DOM. La suite Jest couvre les opérations arithmétiques, la priorité des opérateurs, les parenthèses, les signes unaires, les puissances, les factorielles, les divisions par zéro et le rejet des expressions non autorisées.
+
+```bash
+npm install
+npm test
+```
+
+Le workflow GitHub Actions `Tests unitaires` exécute automatiquement `npm ci` puis `npm test -- --coverage` sur chaque push et chaque pull request. Les résultats et la couverture sont ainsi vérifiés avant toute intégration dans la branche principale.
