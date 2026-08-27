@@ -22,37 +22,37 @@ class AdvancedFeatures {
                 e.preventDefault();
                 this.calculator.saveState();
             }
-            
+
             // Ctrl + L : Charger
             if (e.ctrlKey && e.key === 'l') {
                 e.preventDefault();
                 this.calculator.loadState();
             }
-            
+
             // Ctrl + E : Export
             if (e.ctrlKey && e.key === 'e') {
                 e.preventDefault();
                 this.calculator.exportData();
             }
-            
+
             // Ctrl + D : Mode sombre
             if (e.ctrlKey && e.key === 'd') {
                 e.preventDefault();
                 this.calculator.toggleTheme();
             }
-            
+
             // Ctrl + M : Mode scientifique
             if (e.ctrlKey && e.key === 'm') {
                 e.preventDefault();
                 this.switchToMode('scientific');
             }
-            
+
             // Ctrl + F : Mode financier
             if (e.ctrlKey && e.key === 'f') {
                 e.preventDefault();
                 this.switchToMode('financial');
             }
-            
+
             // Ctrl + C : Mode convertisseur
             if (e.ctrlKey && e.key === 'c') {
                 e.preventDefault();
@@ -66,11 +66,11 @@ class AdvancedFeatures {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            
+
             recognition.continuous = false;
             recognition.interimResults = false;
             recognition.lang = 'fr-FR';
-            
+
             // Bouton pour activer la reconnaissance vocale
             const voiceBtn = document.createElement('button');
             voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
@@ -90,25 +90,25 @@ class AdvancedFeatures {
                 box-shadow: var(--shadow-lg);
                 transition: all 0.3s ease;
             `;
-            
+
             voiceBtn.addEventListener('click', () => {
                 recognition.start();
                 voiceBtn.style.background = 'var(--danger-color)';
                 voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
             });
-            
+
             recognition.onresult = (event) => {
                 const command = event.results[0][0].transcript.toLowerCase();
                 this.processVoiceCommand(command);
                 voiceBtn.style.background = 'var(--primary-color)';
                 voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
             };
-            
+
             recognition.onerror = () => {
                 voiceBtn.style.background = 'var(--primary-color)';
                 voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
             };
-            
+
             document.body.appendChild(voiceBtn);
         }
     }
@@ -130,29 +130,29 @@ class AdvancedFeatures {
         } else if (command.includes('thème clair')) {
             this.calculator.setTheme('light');
         }
-        
+
         this.calculator.showNotification(`Commande reçue: ${command}`);
     }
 
     // Support des gestes (simulation avec la souris)
     addGestureSupport() {
         let startX, startY, startTime;
-        
+
         document.addEventListener('mousedown', (e) => {
             startX = e.clientX;
             startY = e.clientY;
             startTime = Date.now();
         });
-        
+
         document.addEventListener('mouseup', (e) => {
             const endX = e.clientX;
             const endY = e.clientY;
             const endTime = Date.now();
             const duration = endTime - startTime;
-            
+
             const deltaX = endX - startX;
             const deltaY = endY - startY;
-            
+
             // Swipe gauche (changer de mode)
             if (Math.abs(deltaX) > 100 && Math.abs(deltaY) < 50 && duration < 500) {
                 if (deltaX > 0) {
@@ -161,7 +161,7 @@ class AdvancedFeatures {
                     this.previousMode();
                 }
             }
-            
+
             // Swipe vers le haut (afficher l'historique)
             if (Math.abs(deltaY) > 100 && Math.abs(deltaX) < 50 && duration < 500) {
                 if (deltaY < 0) {
@@ -174,28 +174,28 @@ class AdvancedFeatures {
     // Animations avancées
     addAdvancedAnimations() {
         // Animation des boutons au survol
-        document.querySelectorAll('button').forEach(btn => {
+        document.querySelectorAll('button').forEach((btn) => {
             btn.addEventListener('mouseenter', () => {
                 btn.style.transform = 'scale(1.05) rotate(2deg)';
                 btn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.3)';
             });
-            
+
             btn.addEventListener('mouseleave', () => {
                 btn.style.transform = 'scale(1) rotate(0deg)';
                 btn.style.boxShadow = '';
             });
         });
-        
+
         // Animation des résultats
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     entry.target.style.animation = 'bounceIn 0.6s ease-out';
                 }
             });
         });
-        
-        document.querySelectorAll('.result, .calculator').forEach(el => {
+
+        document.querySelectorAll('.result, .calculator').forEach((el) => {
             observer.observe(el);
         });
     }
@@ -204,26 +204,26 @@ class AdvancedFeatures {
     addPerformanceMonitoring() {
         let frameCount = 0;
         let lastTime = performance.now();
-        
+
         const measurePerformance = () => {
             frameCount++;
             const currentTime = performance.now();
-            
+
             if (currentTime - lastTime >= 1000) {
                 const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-                
+
                 // Afficher les FPS en mode développement
                 if (window.location.hostname === 'localhost') {
                     console.log(`FPS: ${fps}`);
                 }
-                
+
                 frameCount = 0;
                 lastTime = currentTime;
             }
-            
+
             requestAnimationFrame(measurePerformance);
         };
-        
+
         requestAnimationFrame(measurePerformance);
     }
 
@@ -269,31 +269,32 @@ class StatisticsFeatures {
             result,
             timestamp: new Date()
         });
-        
+
         this.updateStatistics();
     }
 
     updateStatistics() {
         const results = this.stats.calculationHistory
-            .map(calc => parseFloat(calc.result))
-            .filter(result => !isNaN(result));
-        
+            .map((calc) => parseFloat(calc.result))
+            .filter((result) => !isNaN(result));
+
         if (results.length > 0) {
             this.stats.averageResult = results.reduce((a, b) => a + b, 0) / results.length;
         }
-        
+
         // Trouver l'opérateur le plus utilisé
         const operatorCount = {};
-        this.stats.calculationHistory.forEach(calc => {
+        this.stats.calculationHistory.forEach((calc) => {
             const operator = calc.expression.match(new RegExp('[+*/^-]'))?.[0];
             if (operator) {
                 operatorCount[operator] = (operatorCount[operator] || 0) + 1;
             }
         });
-        
+
         if (Object.keys(operatorCount).length > 0) {
-            this.stats.mostUsedOperator = Object.entries(operatorCount)
-                .sort(([,a], [,b]) => b - a)[0][0];
+            this.stats.mostUsedOperator = Object.entries(operatorCount).sort(
+                ([, a], [, b]) => b - a
+            )[0][0];
         }
     }
 
@@ -325,7 +326,7 @@ class StatisticsFeatures {
                 </div>
             </div>
         `;
-        
+
         // Créer une modal pour afficher les statistiques
         const modal = document.createElement('div');
         modal.className = 'modal stats-modal';
@@ -340,15 +341,15 @@ class StatisticsFeatures {
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(modal);
         modal.classList.add('show');
-        
+
         // Fermer la modal
         modal.querySelector('.modal-close').addEventListener('click', () => {
             modal.remove();
         });
-        
+
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.remove();
@@ -362,7 +363,7 @@ class CustomizationFeatures {
     constructor(calculator) {
         this.calculator = calculator;
         this.customThemes = {
-            'esiea': {
+            esiea: {
                 '--primary-color': '#1e88e5',
                 '--secondary-color': '#10b981',
                 '--accent-color': '#f59e0b'
@@ -372,7 +373,7 @@ class CustomizationFeatures {
                 '--secondary-color': '#8b5cf6',
                 '--accent-color': '#f97316'
             },
-            'nature': {
+            nature: {
                 '--primary-color': '#059669',
                 '--secondary-color': '#10b981',
                 '--accent-color': '#f59e0b'

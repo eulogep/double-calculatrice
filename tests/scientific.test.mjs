@@ -44,15 +44,10 @@ describe('evaluateScientificExpression', () => {
         expect(() => evaluateScientificExpression('10 / 0')).toThrow('Division par zéro');
     });
 
-    test.each([
-        '',
-        '2 +',
-        '2 ** 3',
-        '2 + alert(1)',
-        'Math.sqrt(9)',
-        '2..5',
-        '1e3'
-    ])('refuse une expression non autorisée : %s', (expression) => {
-        expect(() => evaluateScientificExpression(expression)).toThrow();
-    });
+    test.each(['', '2 +', '2 ** 3', '2 + alert(1)', 'Math.sqrt(9)', '2..5', '1e3'])(
+        'refuse une expression non autorisée : %s',
+        (expression) => {
+            expect(() => evaluateScientificExpression(expression)).toThrow();
+        }
+    );
 });

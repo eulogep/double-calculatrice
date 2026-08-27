@@ -1,0 +1,10 @@
+node_modules/
+coverage/
+.git/
+.github/
+tests/
+*.md
+*.bat
+*.sh
+Dockerfile
+docker-compose.yml

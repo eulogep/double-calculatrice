@@ -1,21 +1,24 @@
 {
-  "name": "double-calculatrice",
-  "version": "1.0.0",
-  "description": "Double calculator web app",
-  "main": "main.js",
-  "scripts": {
-    "start": "echo 'No server script'",
-    "build": "echo 'No build step'",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
-    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "lint": "eslint . --ext .js,.mjs --max-warnings 0"
-  },
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.9.1",
-    "globals": "^17.11.0",
-    "jest": "^30.4.2"
-  }
+    "name": "double-calculatrice",
+    "version": "1.0.0",
+    "description": "Double calculator web app",
+    "main": "main.js",
+    "scripts": {
+        "start": "echo 'No server script'",
+        "build": "echo 'No build step'",
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+        "lint": "eslint . --ext .js,.mjs --max-warnings 0",
+        "format": "prettier --write main.js advanced-features.js scientific.mjs tests/scientific.test.mjs eslint.config.mjs package.json .github/workflows/*.yml",
+        "format:check": "prettier --check main.js advanced-features.js scientific.mjs tests/scientific.test.mjs eslint.config.mjs package.json .github/workflows/*.yml"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.9.1",
+        "globals": "^17.11.0",
+        "jest": "^30.4.2",
+        "prettier": "^3.9.6"
+    }
 }

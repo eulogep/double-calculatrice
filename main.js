@@ -30,11 +30,11 @@ class Calculator {
         this.resultElt = document.querySelector('#result');
         this.equalsBtn = document.querySelector('#equals');
         this.operatorBtns = document.querySelectorAll('.op-btn');
-        
+
         // Éléments scientifiques
         this.sciInput = document.querySelector('.sci-input');
         this.sciExpression = document.querySelector('.sci-expression');
-        
+
         // Éléments financiers
         this.finInput = document.querySelector('.fin-input');
         this.finInputs = {
@@ -43,7 +43,7 @@ class Calculator {
             nper: document.querySelector('#nper-input'),
             pmt: document.querySelector('#pmt-input')
         };
-        
+
         // Éléments convertisseur
         this.converterInputs = {
             fromValue: document.querySelector('#from-value'),
@@ -52,15 +52,15 @@ class Calculator {
             toUnit: document.querySelector('#to-unit'),
             conversionType: document.querySelector('#conversion-type')
         };
-        
+
         // Panneau d'historique
         this.historyPanel = document.querySelector('.history-panel');
         this.historyList = document.querySelector('.history-list');
         this.historyChart = document.querySelector('#history-chart');
-        
+
         // Modal de paramètres
         this.settingsModal = document.querySelector('#settings-modal');
-        
+
         // Variables d'état
         this.currentField = this.operand1;
         this.selectedOperator = '+';
@@ -69,33 +69,33 @@ class Calculator {
     }
 
     bindEvents() {
-// Gestion du thème
+        // Gestion du thème
         this.bindThemeEvents();
-        
+
         // Gestion des modes
         this.bindModeEvents();
-        
+
         // Gestion des calculatrices standard
         this.bindStandardCalculatorEvents();
-        
+
         // Gestion de la calculatrice scientifique
         this.bindScientificCalculatorEvents();
-        
+
         // Gestion de la calculatrice financière
         this.bindFinancialCalculatorEvents();
-        
+
         // Gestion du convertisseur
         this.bindConverterEvents();
-        
+
         // Gestion de l'historique
         this.bindHistoryEvents();
-        
+
         // Gestion des paramètres
         this.bindSettingsEvents();
-        
+
         // Gestion des actions
         this.bindActionEvents();
-        
+
         // Gestion du clavier
         this.bindKeyboardEvents();
     }
@@ -103,13 +103,13 @@ class Calculator {
     bindThemeEvents() {
         const themeToggle = document.querySelector('#theme-toggle');
         const themeSelector = document.querySelector('#theme-selector');
-        
+
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
                 this.toggleTheme();
             });
         }
-        
+
         if (themeSelector) {
             themeSelector.addEventListener('change', (e) => {
                 this.setTheme(e.target.value);
@@ -120,18 +120,18 @@ class Calculator {
     bindModeEvents() {
         const modeBtns = document.querySelectorAll('.mode-btn');
         const calculatorModes = document.querySelectorAll('.calculator-mode');
-        
-        modeBtns.forEach(btn => {
+
+        modeBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
                 const mode = btn.dataset.mode;
                 this.switchMode(mode);
-                
+
                 // Mise à jour des boutons
-                modeBtns.forEach(b => b.classList.remove('active'));
+                modeBtns.forEach((b) => b.classList.remove('active'));
                 btn.classList.add('active');
-                
+
                 // Mise à jour des modes
-                calculatorModes.forEach(m => m.classList.remove('active'));
+                calculatorModes.forEach((m) => m.classList.remove('active'));
                 const targetMode = document.querySelector(`#${mode}-mode`);
                 if (targetMode) targetMode.classList.add('active');
             });
@@ -139,14 +139,14 @@ class Calculator {
     }
 
     bindStandardCalculatorEvents() {
-// Sélection de l'opérateur
-        this.operatorBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+        // Sélection de l'opérateur
+        this.operatorBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
                 this.selectedOperator = btn.dataset.op;
-                this.operatorBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
-});
+                this.operatorBtns.forEach((b) => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
 
         // Clic sur "="
         if (this.equalsBtn) {
@@ -156,10 +156,10 @@ class Calculator {
         }
 
         // Claviers numériques
-        ['#calc1', '#calc2'].forEach(calcId => {
+        ['#calc1', '#calc2'].forEach((calcId) => {
             const container = document.querySelector(calcId);
             if (!container) return;
-            
+
             const input = container.querySelector('.operand');
             if (!input) return;
 
@@ -167,7 +167,7 @@ class Calculator {
                 this.currentField = input;
             });
 
-            container.querySelectorAll('.key').forEach(btn => {
+            container.querySelectorAll('.key').forEach((btn) => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     this.handleKeyPress(btn.dataset.key, input);
@@ -179,12 +179,12 @@ class Calculator {
     bindScientificCalculatorEvents() {
         const sciKeypad = document.querySelector('.sci-keypad');
         if (!sciKeypad) return;
-        
+
         sciKeypad.addEventListener('click', (e) => {
             if (e.target.classList.contains('sci-btn')) {
                 const key = e.target.dataset.key;
                 const func = e.target.dataset.func;
-                
+
                 if (key) {
                     this.handleScientificKeyPress(key);
                 } else if (func) {
@@ -196,8 +196,8 @@ class Calculator {
 
     bindFinancialCalculatorEvents() {
         const finBtns = document.querySelectorAll('.fin-btn');
-        
-        finBtns.forEach(btn => {
+
+        finBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
                 const func = btn.dataset.func;
                 this.calculateFinancial(func);
@@ -212,27 +212,27 @@ class Calculator {
                 this.updateConverterUnits();
             });
         }
-        
+
         // Changement de valeur
         if (this.converterInputs.fromValue) {
             this.converterInputs.fromValue.addEventListener('input', () => {
                 this.convert();
             });
         }
-        
+
         // Changement d'unité
         if (this.converterInputs.fromUnit) {
             this.converterInputs.fromUnit.addEventListener('change', () => {
                 this.convert();
             });
         }
-        
+
         if (this.converterInputs.toUnit) {
             this.converterInputs.toUnit.addEventListener('change', () => {
                 this.convert();
             });
         }
-        
+
         // Bouton d'échange
         const swapBtn = document.querySelector('#swap-btn');
         if (swapBtn) {
@@ -260,7 +260,7 @@ class Calculator {
                 this.showSettings();
             });
         }
-        
+
         const saveSettingsBtn = document.querySelector('#save-settings');
         if (saveSettingsBtn) {
             saveSettingsBtn.addEventListener('click', () => {
@@ -276,7 +276,7 @@ class Calculator {
                 this.hideSettings();
             });
         }
-        
+
         // Clic en dehors de la modal
         if (this.settingsModal) {
             this.settingsModal.addEventListener('click', (e) => {
@@ -295,7 +295,7 @@ class Calculator {
                 this.saveState();
             });
         }
-        
+
         // Chargement
         const loadBtn = document.querySelector('#load-btn');
         if (loadBtn) {
@@ -303,7 +303,7 @@ class Calculator {
                 this.loadState();
             });
         }
-        
+
         // Export
         const exportBtn = document.querySelector('#export-btn');
         if (exportBtn) {
@@ -311,7 +311,7 @@ class Calculator {
                 this.exportData();
             });
         }
-        
+
         // Partage
         const shareBtn = document.querySelector('#share-btn');
         if (shareBtn) {
@@ -319,7 +319,7 @@ class Calculator {
                 this.shareCalculator();
             });
         }
-        
+
         // Statistiques
         const statsBtn = document.querySelector('#stats-btn');
         if (statsBtn) {
@@ -329,7 +329,7 @@ class Calculator {
                 }
             });
         }
-        
+
         // Reconnaissance vocale
         const voiceBtn = document.querySelector('#voice-btn');
         if (voiceBtn) {
@@ -337,7 +337,7 @@ class Calculator {
                 this.initializeVoiceRecognition();
             });
         }
-        
+
         // Aide
         const helpBtn = document.querySelector('#help-btn');
         if (helpBtn) {
@@ -345,7 +345,7 @@ class Calculator {
                 this.showHelp();
             });
         }
-        
+
         // Démo
         const demoBtn = document.querySelector('#demo-btn');
         if (demoBtn) {
@@ -357,11 +357,13 @@ class Calculator {
 
     bindKeyboardEvents() {
         document.addEventListener('keydown', (e) => {
-            const isEditable = ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable;
+            const isEditable =
+                ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) ||
+                e.target.isContentEditable;
             if (isEditable) return;
-            
+
             const key = e.key;
-            
+
             // Nombres et opérateurs
             if (/[0-9.]/.test(key)) {
                 this.handleKeyPress(key, this.currentField);
@@ -375,7 +377,7 @@ class Calculator {
             } else if (key === 'Backspace') {
                 this.handleKeyPress('Del', this.currentField);
             }
-            
+
             // Raccourcis clavier avancés
             if (e.ctrlKey) {
                 e.preventDefault();
@@ -418,7 +420,7 @@ class Calculator {
                         break;
                 }
             }
-            
+
             // Raccourcis pour les fonctions scientifiques
             if (this.currentMode === 'scientific') {
                 switch (key) {
@@ -451,7 +453,7 @@ class Calculator {
                         break;
                 }
             }
-            
+
             // Raccourcis pour les fonctions financières
             if (this.currentMode === 'financial') {
                 switch (key) {
@@ -493,9 +495,15 @@ class Calculator {
         let result;
 
         switch (this.selectedOperator) {
-            case '+': result = firstOperand + secondOperand; break;
-            case '-': result = firstOperand - secondOperand; break;
-            case '*': result = firstOperand * secondOperand; break;
+            case '+':
+                result = firstOperand + secondOperand;
+                break;
+            case '-':
+                result = firstOperand - secondOperand;
+                break;
+            case '*':
+                result = firstOperand * secondOperand;
+                break;
             case '/':
                 if (secondOperand === 0) {
                     this.displayResult('Erreur');
@@ -504,7 +512,9 @@ class Calculator {
                 }
                 result = firstOperand / secondOperand;
                 break;
-            case '^': result = Math.pow(firstOperand, secondOperand); break;
+            case '^':
+                result = Math.pow(firstOperand, secondOperand);
+                break;
             case '√':
                 if (firstOperand < 0) {
                     this.displayResult('Erreur');
@@ -513,7 +523,8 @@ class Calculator {
                 }
                 result = Math.sqrt(firstOperand);
                 break;
-            default: result = firstOperand + secondOperand;
+            default:
+                result = firstOperand + secondOperand;
         }
 
         if (!Number.isFinite(result)) {
@@ -556,7 +567,7 @@ class Calculator {
         const rate = readValue(this.finInputs.rate);
         const nper = readValue(this.finInputs.nper);
         const pmt = readValue(this.finInputs.pmt);
-        const values = [pv, rate, nper, pmt].map(value => Number.isFinite(value) ? value : 0);
+        const values = [pv, rate, nper, pmt].map((value) => (Number.isFinite(value) ? value : 0));
         const [initialCapital, annualRate, periods, payment] = values;
 
         const r = annualRate / 100 / 12; // Taux mensuel
@@ -564,31 +575,65 @@ class Calculator {
         const annuityFactor = r === 0 ? n : (1 - Math.pow(1 + r, -n)) / r;
 
         let result;
-        
+
         switch (func) {
             case 'pv':
                 result = payment * annuityFactor;
                 break;
             case 'fv':
-                result = initialCapital * Math.pow(1 + r, n) + payment * (r === 0 ? n : (Math.pow(1 + r, n) - 1) / r);
+                result =
+                    initialCapital * Math.pow(1 + r, n) +
+                    payment * (r === 0 ? n : (Math.pow(1 + r, n) - 1) / r);
                 break;
             case 'pmt':
-                result = r === 0 ? (n === 0 ? NaN : initialCapital / n) : initialCapital / ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
+                result =
+                    r === 0
+                        ? n === 0
+                            ? NaN
+                            : initialCapital / n
+                        : initialCapital / ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
                 break;
             case 'rate':
-                result = n > 0 && initialCapital + payment * n > 0 ? (Math.pow((initialCapital + payment * n) / Math.max(initialCapital, Number.EPSILON), 1 / n) - 1) * 12 * 100 : NaN;
+                result =
+                    n > 0 && initialCapital + payment * n > 0
+                        ? (Math.pow(
+                              (initialCapital + payment * n) /
+                                  Math.max(initialCapital, Number.EPSILON),
+                              1 / n
+                          ) -
+                              1) *
+                          12 *
+                          100
+                        : NaN;
                 break;
             case 'nper':
-                result = r === 0 ? (payment === 0 ? NaN : -initialCapital / payment) : Math.log(payment / (payment - initialCapital * r)) / Math.log(1 + r);
+                result =
+                    r === 0
+                        ? payment === 0
+                            ? NaN
+                            : -initialCapital / payment
+                        : Math.log(payment / (payment - initialCapital * r)) / Math.log(1 + r);
                 break;
             case 'irr':
-                result = n > 0 && initialCapital + payment * n > 0 ? (Math.pow((initialCapital + payment * n) / Math.max(initialCapital, Number.EPSILON), 1 / n) - 1) * 100 : NaN;
+                result =
+                    n > 0 && initialCapital + payment * n > 0
+                        ? (Math.pow(
+                              (initialCapital + payment * n) /
+                                  Math.max(initialCapital, Number.EPSILON),
+                              1 / n
+                          ) -
+                              1) *
+                          100
+                        : NaN;
                 break;
             case 'npv':
                 result = initialCapital + payment * annuityFactor;
                 break;
             case 'roi':
-                result = initialCapital === 0 ? NaN : ((payment * n - initialCapital) / Math.abs(initialCapital)) * 100;
+                result =
+                    initialCapital === 0
+                        ? NaN
+                        : ((payment * n - initialCapital) / Math.abs(initialCapital)) * 100;
                 break;
             case 'compound':
                 result = initialCapital * Math.pow(1 + r, n);
@@ -617,7 +662,7 @@ class Calculator {
         const fromUnit = this.converterInputs.fromUnit.value;
         const toUnit = this.converterInputs.toUnit.value;
         const type = this.converterInputs.conversionType.value;
-        
+
         const result = this.performConversion(value, fromUnit, toUnit, type);
         this.converterInputs.toValue.value = this.formatNumber(result);
     }
@@ -625,32 +670,50 @@ class Calculator {
     performConversion(value, fromUnit, toUnit, type) {
         const conversions = {
             length: {
-                m: 1, km: 1000, cm: 0.01, mm: 0.001, mi: 1609.34, yd: 0.9144, ft: 0.3048, in: 0.0254
+                m: 1,
+                km: 1000,
+                cm: 0.01,
+                mm: 0.001,
+                mi: 1609.34,
+                yd: 0.9144,
+                ft: 0.3048,
+                in: 0.0254
             },
             weight: {
-                kg: 1, g: 0.001, mg: 0.000001, lb: 0.453592, oz: 0.0283495
+                kg: 1,
+                g: 0.001,
+                mg: 0.000001,
+                lb: 0.453592,
+                oz: 0.0283495
             },
             temperature: {
                 C: (val) => val,
-                F: (val) => (val - 32) * 5/9,
+                F: (val) => ((val - 32) * 5) / 9,
                 K: (val) => val - 273.15
             },
             area: {
-                m2: 1, km2: 1000000, cm2: 0.0001, ha: 10000, ac: 4046.86
+                m2: 1,
+                km2: 1000000,
+                cm2: 0.0001,
+                ha: 10000,
+                ac: 4046.86
             },
             volume: {
-                m3: 1, l: 0.001, ml: 0.000001, gal: 0.00378541
+                m3: 1,
+                l: 0.001,
+                ml: 0.000001,
+                gal: 0.00378541
             }
         };
-        
+
         const conv = conversions[type];
         if (!conv || !(fromUnit in conv) || !(toUnit in conv)) return value;
-        
+
         if (type === 'temperature') {
             // Conversion spéciale pour la température
             const toCelsius = conv[fromUnit](value);
             const fromCelsius = (temp) => {
-                if (toUnit === 'F') return temp * 9/5 + 32;
+                if (toUnit === 'F') return (temp * 9) / 5 + 32;
                 if (toUnit === 'K') return temp + 273.15;
                 return temp;
             };
@@ -671,36 +734,40 @@ class Calculator {
             area: ['m2', 'km2', 'cm2', 'ha', 'ac'],
             volume: ['m3', 'l', 'ml', 'gal']
         };
-        
+
         const unitList = units[type] || [];
-        
+
         if (this.converterInputs.fromUnit) {
-            this.converterInputs.fromUnit.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join('');
+            this.converterInputs.fromUnit.innerHTML = unitList
+                .map((u) => `<option value="${u}">${u}</option>`)
+                .join('');
         }
         if (this.converterInputs.toUnit) {
-            this.converterInputs.toUnit.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join('');
+            this.converterInputs.toUnit.innerHTML = unitList
+                .map((u) => `<option value="${u}">${u}</option>`)
+                .join('');
         }
-        
+
         if (this.converterInputs.fromUnit) {
             this.converterInputs.fromUnit.value = unitList[0];
         }
         if (this.converterInputs.toUnit) {
             this.converterInputs.toUnit.value = unitList[1] || unitList[0];
         }
-        
+
         this.convert();
     }
 
     swapConverterUnits() {
         const tempValue = this.converterInputs.fromValue.value;
         const tempUnit = this.converterInputs.fromUnit.value;
-        
+
         this.converterInputs.fromValue.value = this.converterInputs.toValue.value;
         this.converterInputs.fromUnit.value = this.converterInputs.toUnit.value;
-        
+
         this.converterInputs.toValue.value = tempValue;
         this.converterInputs.toUnit.value = tempUnit;
-        
+
         this.convert();
     }
 
@@ -708,16 +775,16 @@ class Calculator {
     handleKeyPress(key, input) {
         if (!key || !input) return;
 
-            if (key === 'C') {
-                input.value = '0';
+        if (key === 'C') {
+            input.value = '0';
             if (this.resultElt) this.resultElt.textContent = '0';
-                return;
-            }
+            return;
+        }
 
-            if (key === 'Del') {
-                input.value = input.value.length > 1 ? input.value.slice(0, -1) : '0';
-                return;
-            }
+        if (key === 'Del') {
+            input.value = input.value.length > 1 ? input.value.slice(0, -1) : '0';
+            return;
+        }
 
         if (key === '±') {
             input.value = input.value.startsWith('-') ? input.value.slice(1) : '-' + input.value;
@@ -732,15 +799,15 @@ class Calculator {
         if (key === '.' && input.value.includes('.')) return;
 
         if (input.value === '0' && key !== '.') {
-                input.value = key;
-            } else {
-                input.value += key;
-            }
+            input.value = key;
+        } else {
+            input.value += key;
+        }
     }
 
     handleScientificKeyPress(key) {
         if (!this.sciInput) return;
-        
+
         if (key === 'C') {
             this.sciInput.value = '0';
             this.sciExpression = '';
@@ -758,28 +825,62 @@ class Calculator {
 
     handleScientificFunction(func) {
         if (!this.sciInput) return;
-        
+
         const value = parseFloat(this.sciInput.value) || 0;
         let result;
-        
+
         switch (func) {
-            case 'sin': result = Math.sin(value * Math.PI / 180); break;
-            case 'cos': result = Math.cos(value * Math.PI / 180); break;
-            case 'tan': result = Math.tan(value * Math.PI / 180); break;
-            case 'asin': result = Math.asin(value) * 180 / Math.PI; break;
-            case 'acos': result = Math.acos(value) * 180 / Math.PI; break;
-            case 'atan': result = Math.atan(value) * 180 / Math.PI; break;
-            case 'log': result = Math.log10(value); break;
-            case 'ln': result = Math.log(value); break;
-            case 'exp': result = Math.exp(value); break;
-            case 'sqrt': result = Math.sqrt(value); break;
-            case 'abs': result = Math.abs(value); break;
-            case 'fact': result = factorial(value); break;
-            case 'pi': result = Math.PI; break;
-            case 'e': result = Math.E; break;
-            case 'floor': result = Math.floor(value); break;
-            case 'ceil': result = Math.ceil(value); break;
-            case 'round': result = Math.round(value); break;
+            case 'sin':
+                result = Math.sin((value * Math.PI) / 180);
+                break;
+            case 'cos':
+                result = Math.cos((value * Math.PI) / 180);
+                break;
+            case 'tan':
+                result = Math.tan((value * Math.PI) / 180);
+                break;
+            case 'asin':
+                result = (Math.asin(value) * 180) / Math.PI;
+                break;
+            case 'acos':
+                result = (Math.acos(value) * 180) / Math.PI;
+                break;
+            case 'atan':
+                result = (Math.atan(value) * 180) / Math.PI;
+                break;
+            case 'log':
+                result = Math.log10(value);
+                break;
+            case 'ln':
+                result = Math.log(value);
+                break;
+            case 'exp':
+                result = Math.exp(value);
+                break;
+            case 'sqrt':
+                result = Math.sqrt(value);
+                break;
+            case 'abs':
+                result = Math.abs(value);
+                break;
+            case 'fact':
+                result = factorial(value);
+                break;
+            case 'pi':
+                result = Math.PI;
+                break;
+            case 'e':
+                result = Math.E;
+                break;
+            case 'floor':
+                result = Math.floor(value);
+                break;
+            case 'ceil':
+                result = Math.ceil(value);
+                break;
+            case 'round':
+                result = Math.round(value);
+                break;
             case 'pow':
                 this.sciExpression += '^';
                 this.sciInput.value += '^';
@@ -806,14 +907,14 @@ class Calculator {
     // Méthodes d'affichage
     displayResult(result) {
         if (!this.resultElt) return;
-        
+
         this.resultElt.classList.remove('show');
         this.resultElt.textContent = result;
         setTimeout(() => this.resultElt.classList.add('show'), 10);
     }
 
     updateOperatorButtons() {
-        this.operatorBtns.forEach(btn => {
+        this.operatorBtns.forEach((btn) => {
             btn.classList.toggle('active', btn.dataset.op === this.selectedOperator);
         });
     }
@@ -827,9 +928,12 @@ class Calculator {
 
     setTheme(theme) {
         const requestedTheme = ['auto', 'light', 'dark'].includes(theme) ? theme : 'auto';
-        const resolvedTheme = requestedTheme === 'auto'
-            ? (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-            : requestedTheme;
+        const resolvedTheme =
+            requestedTheme === 'auto'
+                ? window.matchMedia?.('(prefers-color-scheme: dark)').matches
+                    ? 'dark'
+                    : 'light'
+                : requestedTheme;
 
         document.documentElement.setAttribute('data-theme', resolvedTheme);
         localStorage.setItem('calculator-theme', requestedTheme);
@@ -849,12 +953,12 @@ class Calculator {
         if (!validModes.includes(mode)) return;
 
         this.currentMode = mode;
-        document.querySelectorAll('.mode-btn').forEach(button => {
+        document.querySelectorAll('.mode-btn').forEach((button) => {
             const isActive = button.dataset.mode === mode;
             button.classList.toggle('active', isActive);
             button.setAttribute('aria-selected', String(isActive));
         });
-        document.querySelectorAll('.calculator-mode').forEach(panel => {
+        document.querySelectorAll('.calculator-mode').forEach((panel) => {
             const isActive = panel.id === `${mode}-mode`;
             panel.classList.toggle('active', isActive);
             panel.setAttribute('aria-hidden', String(!isActive));
@@ -876,13 +980,13 @@ class Calculator {
             timestamp,
             mode: this.currentMode
         };
-        
+
         this.history.unshift(historyItem);
-        
+
         if (this.history.length > CONFIG.maxHistoryItems) {
             this.history.pop();
         }
-        
+
         this.updateHistoryDisplay();
         this.updateHistoryChart();
         this.saveHistory();
@@ -890,19 +994,31 @@ class Calculator {
 
     updateHistoryDisplay() {
         if (!this.historyList) return;
-        
-        this.historyList.innerHTML = this.history.map(item => `
+
+        this.historyList.innerHTML = this.history
+            .map(
+                (item) => `
             <div class="history-item" data-id="${this.escapeHtml(item.id)}">
                 <div class="history-entry">${this.escapeHtml(item.entry)}</div>
                 <div class="history-timestamp">${this.escapeHtml(item.timestamp)}</div>
             </div>
-        `).join('');
+        `
+            )
+            .join('');
     }
 
     escapeHtml(value) {
-        return String(value ?? '').replace(/[&<>'"]/g, character => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-        }[character]));
+        return String(value ?? '').replace(
+            /[&<>'"]/g,
+            (character) =>
+                ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                })[character]
+        );
     }
 
     clearHistory() {
@@ -922,19 +1038,21 @@ class Calculator {
     // Méthodes de graphiques
     initializeChart() {
         if (!this.historyChart || typeof Chart === 'undefined') return;
-        
+
         const ctx = this.historyChart.getContext('2d');
         this.chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
-                datasets: [{
-                    label: 'Résultats',
-                    data: [],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4
-                }]
+                datasets: [
+                    {
+                        label: 'Résultats',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    }
+                ]
             },
             options: {
                 responsive: true,
@@ -955,16 +1073,16 @@ class Calculator {
 
     updateHistoryChart() {
         if (!this.chart) return;
-        
+
         const numericResults = this.history
-            .filter(item => {
+            .filter((item) => {
                 const result = item.entry.split('=')[1]?.trim();
                 return !isNaN(parseFloat(result));
             })
-            .map(item => parseFloat(item.entry.split('=')[1]?.trim()))
+            .map((item) => parseFloat(item.entry.split('=')[1]?.trim()))
             .slice(0, 10);
-        
-        this.chart.data.labels = Array.from({length: numericResults.length}, (_, i) => i + 1);
+
+        this.chart.data.labels = Array.from({ length: numericResults.length }, (_, i) => i + 1);
         this.chart.data.datasets[0].data = numericResults;
         this.chart.update();
     }
@@ -985,8 +1103,13 @@ class Calculator {
     loadSettings() {
         const storedTheme = localStorage.getItem('calculator-theme');
         const savedTheme = ['auto', 'light', 'dark'].includes(storedTheme) ? storedTheme : 'auto';
-        const parsedPrecision = Number.parseInt(localStorage.getItem('calculator-precision') || '2', 10);
-        const savedPrecision = Number.isInteger(parsedPrecision) ? Math.min(10, Math.max(0, parsedPrecision)) : 2;
+        const parsedPrecision = Number.parseInt(
+            localStorage.getItem('calculator-precision') || '2',
+            10
+        );
+        const savedPrecision = Number.isInteger(parsedPrecision)
+            ? Math.min(10, Math.max(0, parsedPrecision))
+            : 2;
         const savedAnimations = localStorage.getItem('calculator-animations') !== 'false';
 
         this.setTheme(savedTheme);
@@ -1008,10 +1131,14 @@ class Calculator {
     saveSettings() {
         const precisionInput = document.querySelector('#decimal-precision');
         const parsedPrecision = Number.parseInt(precisionInput?.value ?? '2', 10);
-        const precision = Number.isInteger(parsedPrecision) ? Math.min(10, Math.max(0, parsedPrecision)) : 2;
+        const precision = Number.isInteger(parsedPrecision)
+            ? Math.min(10, Math.max(0, parsedPrecision))
+            : 2;
         const animations = document.querySelector('#animations-enabled')?.checked ?? true;
         const themeSelector = document.querySelector('#theme-selector');
-        const theme = ['auto', 'light', 'dark'].includes(themeSelector?.value) ? themeSelector.value : 'auto';
+        const theme = ['auto', 'light', 'dark'].includes(themeSelector?.value)
+            ? themeSelector.value
+            : 'auto';
 
         localStorage.setItem('calculator-precision', String(precision));
         localStorage.setItem('calculator-animations', String(animations));
@@ -1028,15 +1155,15 @@ class Calculator {
 
     // Méthodes de sauvegarde/chargement
     saveState() {
-    const state = {
+        const state = {
             operand1: this.operand1?.value || '0',
             operand2: this.operand2?.value || '0',
             operator: this.selectedOperator,
             mode: this.currentMode,
             timestamp: new Date().toISOString()
         };
-        
-    localStorage.setItem('calculator-state', JSON.stringify(state));
+
+        localStorage.setItem('calculator-state', JSON.stringify(state));
         this.showNotification('État sauvegardé avec succès !');
     }
 
@@ -1072,7 +1199,9 @@ class Calculator {
 
         try {
             const parsedHistory = JSON.parse(saved);
-            this.history = Array.isArray(parsedHistory) ? parsedHistory.slice(0, CONFIG.maxHistoryItems) : [];
+            this.history = Array.isArray(parsedHistory)
+                ? parsedHistory.slice(0, CONFIG.maxHistoryItems)
+                : [];
         } catch {
             this.history = [];
             localStorage.removeItem('calculator-history');
@@ -1089,15 +1218,15 @@ class Calculator {
             settings: CONFIG,
             timestamp: new Date().toISOString()
         };
-        
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `calculatrice-export-${new Date().toISOString().split('T')[0]}.json`;
         a.click();
         URL.revokeObjectURL(url);
-        
+
         this.showNotification('Données exportées avec succès !');
     }
 
@@ -1130,27 +1259,27 @@ class Calculator {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            
+
             recognition.continuous = false;
             recognition.interimResults = false;
             recognition.lang = 'fr-FR';
-            
+
             recognition.start();
             this.showNotification('Écoute en cours... Parlez maintenant !');
-            
+
             recognition.onresult = (event) => {
                 const command = event.results[0][0].transcript.toLowerCase();
                 this.processVoiceCommand(command);
             };
-            
+
             recognition.onerror = () => {
                 this.showNotification('Erreur de reconnaissance vocale');
             };
-            
+
             recognition.onend = () => {
                 this.showNotification('Reconnaissance vocale terminée');
             };
-    } else {
+        } else {
             this.showNotification('Reconnaissance vocale non supportée par ce navigateur');
         }
     }
@@ -1158,7 +1287,7 @@ class Calculator {
     // Traitement des commandes vocales
     processVoiceCommand(command) {
         this.showNotification(`Commande reçue: ${command}`);
-        
+
         if (command.includes('calculer') || command.includes('calcul')) {
             this.calculateStandard();
         } else if (command.includes('effacer') || command.includes('clear')) {
@@ -1276,15 +1405,15 @@ class Calculator {
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(helpModal);
         helpModal.classList.add('show');
-        
+
         // Fermer la modal
         helpModal.querySelector('.modal-close').addEventListener('click', () => {
             helpModal.remove();
         });
-        
+
         helpModal.addEventListener('click', (e) => {
             if (e.target === helpModal) {
                 helpModal.remove();
@@ -1295,29 +1424,54 @@ class Calculator {
     // Démonstration automatique
     startDemo() {
         this.showNotification('Démo en cours...');
-        
+
         const demoSteps = [
             { delay: 1000, action: () => this.switchMode('standard') },
-            { delay: 2000, action: () => { this.operand1.value = '15'; this.operand2.value = '7'; } },
-            { delay: 3000, action: () => { this.selectedOperator = '+'; this.updateOperatorButtons(); } },
+            {
+                delay: 2000,
+                action: () => {
+                    this.operand1.value = '15';
+                    this.operand2.value = '7';
+                }
+            },
+            {
+                delay: 3000,
+                action: () => {
+                    this.selectedOperator = '+';
+                    this.updateOperatorButtons();
+                }
+            },
             { delay: 4000, action: () => this.calculateStandard() },
             { delay: 5000, action: () => this.switchMode('scientific') },
-            { delay: 6000, action: () => { this.sciInput.value = '45'; } },
+            {
+                delay: 6000,
+                action: () => {
+                    this.sciInput.value = '45';
+                }
+            },
             { delay: 7000, action: () => this.handleScientificFunction('sin') },
             { delay: 8000, action: () => this.switchMode('financial') },
-            { delay: 9000, action: () => { 
-                this.finInputs.pv.value = '1000';
-                this.finInputs.rate.value = '5';
-                this.finInputs.nper.value = '10';
-            }},
+            {
+                delay: 9000,
+                action: () => {
+                    this.finInputs.pv.value = '1000';
+                    this.finInputs.rate.value = '5';
+                    this.finInputs.nper.value = '10';
+                }
+            },
             { delay: 10000, action: () => this.calculateFinancial('fv') },
             { delay: 11000, action: () => this.switchMode('converter') },
-            { delay: 12000, action: () => { this.converterInputs.fromValue.value = '100'; } },
+            {
+                delay: 12000,
+                action: () => {
+                    this.converterInputs.fromValue.value = '100';
+                }
+            },
             { delay: 13000, action: () => this.convert() },
             { delay: 14000, action: () => this.switchMode('standard') },
             { delay: 15000, action: () => this.showNotification('Démo terminée !') }
         ];
-        
+
         let currentStep = 0;
         const runDemoStep = () => {
             if (currentStep < demoSteps.length) {
@@ -1329,7 +1483,7 @@ class Calculator {
                 }, step.delay);
             }
         };
-        
+
         runDemoStep();
     }
 
@@ -1371,9 +1525,9 @@ class Calculator {
             z-index: 10000;
             animation: slideInRight 0.3s ease-out;
         `;
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.3s ease-out';
             setTimeout(() => notification.remove(), 300);
@@ -1384,10 +1538,10 @@ class Calculator {
     init() {
         this.updateConverterUnits();
         console.log('Calculatrice Pro initialisée avec succès !');
-        
+
         // Initialiser les fonctionnalités avancées
         this.initializeAdvancedFeatures();
-        
+
         // Initialiser les effets visuels personnalisés
         this.initializeAllVisualEffects();
     }
@@ -1400,12 +1554,12 @@ class Calculator {
                 this.advancedFeatures = new AdvancedFeatures(this);
                 console.log('Fonctionnalités avancées initialisées');
             }
-            
+
             if (window.StatisticsFeatures) {
                 this.statisticsFeatures = new StatisticsFeatures(this);
                 console.log('Fonctionnalités de statistiques initialisées');
             }
-            
+
             if (window.CustomizationFeatures) {
                 this.customizationFeatures = new CustomizationFeatures(this);
                 console.log('Fonctionnalités de personnalisation initialisées');
@@ -1432,12 +1586,12 @@ class Calculator {
         for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
             particle.className = 'custom-particle';
-            
+
             // Position aléatoire
             particle.style.left = Math.random() * 100 + '%';
             particle.style.animationDelay = Math.random() * 10 + 's';
-            particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
-            
+            particle.style.animationDuration = Math.random() * 10 + 5 + 's';
+
             particlesContainer.appendChild(particle);
         }
     }
@@ -1446,14 +1600,15 @@ class Calculator {
     initializeNeonEffects() {
         // Effet de néon pour les boutons au clic
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('key') || 
-                e.target.classList.contains('op-btn') || 
-                e.target.classList.contains('sci-btn') || 
-                e.target.classList.contains('fin-btn')) {
-                
+            if (
+                e.target.classList.contains('key') ||
+                e.target.classList.contains('op-btn') ||
+                e.target.classList.contains('sci-btn') ||
+                e.target.classList.contains('fin-btn')
+            ) {
                 // Créer un effet de ripple
                 this.createRippleEffect(e);
-                
+
                 // Effet de néon temporaire
                 e.target.style.animation = 'neonGlow 0.5s ease-in-out';
                 setTimeout(() => {
@@ -1464,7 +1619,7 @@ class Calculator {
 
         // Effet de néon pour les résultats
         const resultElements = document.querySelectorAll('.result');
-        resultElements.forEach(result => {
+        resultElements.forEach((result) => {
             result.addEventListener('animationend', () => {
                 if (result.classList.contains('show')) {
                     result.style.animation = 'neonPulse 2s ease-in-out infinite';
@@ -1477,7 +1632,7 @@ class Calculator {
     createRippleEffect(event) {
         const button = event.target;
         const ripple = document.createElement('div');
-        
+
         ripple.style.position = 'absolute';
         ripple.style.width = '20px';
         ripple.style.height = '20px';
@@ -1485,14 +1640,14 @@ class Calculator {
         ripple.style.borderRadius = '50%';
         ripple.style.transform = 'scale(0)';
         ripple.style.animation = 'ripple 0.6s linear';
-        ripple.style.left = (event.offsetX - 10) + 'px';
-        ripple.style.top = (event.offsetY - 10) + 'px';
+        ripple.style.left = event.offsetX - 10 + 'px';
+        ripple.style.top = event.offsetY - 10 + 'px';
         ripple.style.pointerEvents = 'none';
-        
+
         button.style.position = 'relative';
         button.style.overflow = 'hidden';
         button.appendChild(ripple);
-        
+
         setTimeout(() => {
             ripple.remove();
         }, 600);
@@ -1502,11 +1657,11 @@ class Calculator {
     initializeMorphingEffects() {
         // Effet de morphing pour les calculatrices
         const calculators = document.querySelectorAll('.calculator');
-        calculators.forEach(calc => {
+        calculators.forEach((calc) => {
             calc.addEventListener('mouseenter', () => {
                 calc.style.animation = 'morphing 3s ease-in-out infinite';
             });
-            
+
             calc.addEventListener('mouseleave', () => {
                 calc.style.animation = '';
             });
@@ -1514,7 +1669,7 @@ class Calculator {
 
         // Effet de morphing pour les modales
         const modals = document.querySelectorAll('.modal-content');
-        modals.forEach(modal => {
+        modals.forEach((modal) => {
             modal.addEventListener('animationend', () => {
                 if (modal.closest('.modal').classList.contains('show')) {
                     modal.style.animation = 'morphing 6s ease-in-out infinite';
@@ -1526,11 +1681,11 @@ class Calculator {
     // Animation de typewriter pour les titres
     initializeTypewriterEffect() {
         const titles = document.querySelectorAll('.demo-title');
-        titles.forEach(title => {
+        titles.forEach((title) => {
             const text = title.textContent;
             title.textContent = '';
             title.style.borderRight = '3px solid var(--primary-color)';
-            
+
             let i = 0;
             const typewriter = setInterval(() => {
                 title.textContent += text.charAt(i);
@@ -1549,9 +1704,9 @@ class Calculator {
         notification.className = 'notification glitch-notification';
         notification.textContent = message;
         notification.style.animation = 'glitch 0.3s ease-in-out';
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.remove();
         }, 3000);
@@ -1560,11 +1715,11 @@ class Calculator {
     // Animation de rotation 3D pour les icônes
     initialize3DRotation() {
         const icons = document.querySelectorAll('.feature-icon i, .nav-logo, .mode-btn i');
-        icons.forEach(icon => {
+        icons.forEach((icon) => {
             icon.addEventListener('mouseenter', () => {
                 icon.style.animation = 'rotate3DEnhanced 1.5s ease-in-out';
             });
-            
+
             icon.addEventListener('animationend', () => {
                 icon.style.animation = '';
             });
@@ -1574,11 +1729,11 @@ class Calculator {
     // Effet de wave amélioré pour les boutons spéciaux
     initializeWaveEffects() {
         const waveButtons = document.querySelectorAll('.equals, .action-btn, .voice-btn');
-        waveButtons.forEach(button => {
+        waveButtons.forEach((button) => {
             button.addEventListener('mouseenter', () => {
                 button.style.animation = 'waveEnhanced 0.8s ease-in-out';
             });
-            
+
             button.addEventListener('animationend', () => {
                 button.style.animation = '';
             });
@@ -1588,11 +1743,11 @@ class Calculator {
     // Animation de gradient pour les éléments spéciaux
     initializeGradientEffects() {
         const gradientElements = document.querySelectorAll('.equals, .tech-badge, .demo-section');
-        gradientElements.forEach(element => {
+        gradientElements.forEach((element) => {
             element.addEventListener('mouseenter', () => {
                 element.style.animation = 'gradientShift 2s ease infinite';
             });
-            
+
             element.addEventListener('mouseleave', () => {
                 element.style.animation = '';
             });
@@ -1602,11 +1757,11 @@ class Calculator {
     // Effet de néon pour les inputs focus
     initializeNeonInputs() {
         const inputs = document.querySelectorAll('.operand, .sci-input, .fin-input');
-        inputs.forEach(input => {
+        inputs.forEach((input) => {
             input.addEventListener('focus', () => {
                 input.style.animation = 'neonGlow 1s ease-in-out infinite';
             });
-            
+
             input.addEventListener('blur', () => {
                 input.style.animation = '';
             });
@@ -1616,11 +1771,11 @@ class Calculator {
     // Animation de pulse pour les éléments interactifs
     initializePulseEffects() {
         const pulseElements = document.querySelectorAll('.key, .op-btn, .sci-btn, .fin-btn');
-        pulseElements.forEach(element => {
+        pulseElements.forEach((element) => {
             element.addEventListener('focus', () => {
                 element.style.animation = 'pulseNeon 1s ease-in-out infinite';
             });
-            
+
             element.addEventListener('blur', () => {
                 element.style.animation = '';
             });
@@ -1630,11 +1785,11 @@ class Calculator {
     // Effet de morphing pour les conteneurs
     initializeMorphingContainers() {
         const containers = document.querySelectorAll('.calculators-wrapper, .feature-grid');
-        containers.forEach(container => {
+        containers.forEach((container) => {
             container.addEventListener('mouseenter', () => {
                 container.style.animation = 'morphing 6s ease-in-out infinite';
             });
-            
+
             container.addEventListener('mouseleave', () => {
                 container.style.animation = '';
             });
@@ -1644,7 +1799,7 @@ class Calculator {
     // Animation de slide avec perspective pour les modales
     initializeSlidePerspective() {
         const modals = document.querySelectorAll('.modal');
-        modals.forEach(modal => {
+        modals.forEach((modal) => {
             modal.addEventListener('animationend', () => {
                 if (modal.classList.contains('show')) {
                     const content = modal.querySelector('.modal-content');
@@ -1659,7 +1814,7 @@ class Calculator {
     // Effet de néon pour les résultats de calcul
     initializeResultNeon() {
         const results = document.querySelectorAll('.result');
-        results.forEach(result => {
+        results.forEach((result) => {
             result.addEventListener('animationend', () => {
                 if (result.classList.contains('show')) {
                     result.style.animation = 'neonPulse 2s ease-in-out infinite';
@@ -1671,11 +1826,11 @@ class Calculator {
     // Animation de morphing pour les panneaux
     initializePanelMorphing() {
         const panels = document.querySelectorAll('.history-panel, .stats-panel');
-        panels.forEach(panel => {
+        panels.forEach((panel) => {
             panel.addEventListener('mouseenter', () => {
                 panel.style.animation = 'morphing 5s ease-in-out infinite';
             });
-            
+
             panel.addEventListener('mouseleave', () => {
                 panel.style.animation = '';
             });
@@ -1685,11 +1840,11 @@ class Calculator {
     // Effet de néon pour les boutons de mode
     initializeModeButtonNeon() {
         const modeButtons = document.querySelectorAll('.mode-btn');
-        modeButtons.forEach(button => {
+        modeButtons.forEach((button) => {
             button.addEventListener('mouseenter', () => {
                 button.style.animation = 'neonGlow 1.5s ease-in-out infinite';
             });
-            
+
             button.addEventListener('mouseleave', () => {
                 if (!button.classList.contains('active')) {
                     button.style.animation = '';
@@ -1701,11 +1856,11 @@ class Calculator {
     // Animation de rotation pour les icônes de navigation
     initializeNavigationRotation() {
         const navIcons = document.querySelectorAll('.nav-logo, .theme-btn, .settings-btn');
-        navIcons.forEach(icon => {
+        navIcons.forEach((icon) => {
             icon.addEventListener('mouseenter', () => {
                 icon.style.animation = 'rotate3D 1s ease-in-out';
             });
-            
+
             icon.addEventListener('animationend', () => {
                 icon.style.animation = '';
             });
@@ -1715,11 +1870,11 @@ class Calculator {
     // Effet de wave pour les boutons de fermeture
     initializeCloseButtonWave() {
         const closeButtons = document.querySelectorAll('.modal-close');
-        closeButtons.forEach(button => {
+        closeButtons.forEach((button) => {
             button.addEventListener('mouseenter', () => {
                 button.style.animation = 'wave 0.4s ease-in-out';
             });
-            
+
             button.addEventListener('animationend', () => {
                 button.style.animation = '';
             });
@@ -1729,11 +1884,11 @@ class Calculator {
     // Animation de morphing pour les inputs de conversion
     initializeConverterMorphing() {
         const converterInputs = document.querySelectorAll('.converter-inputs');
-        converterInputs.forEach(input => {
+        converterInputs.forEach((input) => {
             input.addEventListener('mouseenter', () => {
                 input.style.animation = 'morphing 4s ease-in-out infinite';
             });
-            
+
             input.addEventListener('mouseleave', () => {
                 input.style.animation = '';
             });
@@ -1743,11 +1898,11 @@ class Calculator {
     // Animation de pulse pour les éléments de liste
     initializeListPulse() {
         const listItems = document.querySelectorAll('.history-item');
-        listItems.forEach(item => {
+        listItems.forEach((item) => {
             item.addEventListener('mouseenter', () => {
                 item.style.animation = 'pulseActive 0.4s ease-in-out';
             });
-            
+
             item.addEventListener('animationend', () => {
                 item.style.animation = '';
             });
@@ -1757,11 +1912,11 @@ class Calculator {
     // Effet de néon pour les boutons de paramètres
     initializeSettingsNeon() {
         const settingsButtons = document.querySelectorAll('.setting-group button');
-        settingsButtons.forEach(button => {
+        settingsButtons.forEach((button) => {
             button.addEventListener('mouseenter', () => {
                 button.style.animation = 'neonGlow 1.5s ease-in-out infinite';
             });
-            
+
             button.addEventListener('mouseleave', () => {
                 button.style.animation = '';
             });
@@ -1771,11 +1926,11 @@ class Calculator {
     // Animation de wave pour les boutons de swap
     initializeSwapWave() {
         const swapButtons = document.querySelectorAll('.swap-btn');
-        swapButtons.forEach(button => {
+        swapButtons.forEach((button) => {
             button.addEventListener('mouseenter', () => {
                 button.style.animation = 'wave 0.5s ease-in-out';
             });
-            
+
             button.addEventListener('animationend', () => {
                 button.style.animation = '';
             });
@@ -1785,11 +1940,11 @@ class Calculator {
     // Effet de morphing pour les sélecteurs
     initializeSelectorMorphing() {
         const selectors = document.querySelectorAll('.converter-selector');
-        selectors.forEach(selector => {
+        selectors.forEach((selector) => {
             selector.addEventListener('mouseenter', () => {
                 selector.style.animation = 'morphing 3s ease-in-out infinite';
             });
-            
+
             selector.addEventListener('mouseleave', () => {
                 selector.style.animation = '';
             });
@@ -1799,11 +1954,11 @@ class Calculator {
     // Animation de rotation pour les icônes de mode
     initializeModeIconRotation() {
         const modeIcons = document.querySelectorAll('.mode-selector .mode-btn i');
-        modeIcons.forEach(icon => {
+        modeIcons.forEach((icon) => {
             icon.addEventListener('mouseenter', () => {
                 icon.style.animation = 'rotate3D 0.6s ease-in-out';
             });
-            
+
             icon.addEventListener('animationend', () => {
                 icon.style.animation = '';
             });
@@ -1813,11 +1968,11 @@ class Calculator {
     // Effet de néon pour les éléments de statistiques
     initializeStatsNeon() {
         const statValues = document.querySelectorAll('.stat-item span:last-child');
-        statValues.forEach(value => {
+        statValues.forEach((value) => {
             value.addEventListener('mouseenter', () => {
                 value.style.animation = 'neonPulse 2s ease-in-out infinite';
             });
-            
+
             value.addEventListener('mouseleave', () => {
                 value.style.animation = '';
             });
@@ -1827,11 +1982,11 @@ class Calculator {
     // Animation de gradient pour les cartes de démonstration
     initializeDemoGradient() {
         const demoSections = document.querySelectorAll('.demo-section');
-        demoSections.forEach(section => {
+        demoSections.forEach((section) => {
             section.addEventListener('mouseenter', () => {
                 section.style.animation = 'gradientShift 10s ease infinite';
             });
-            
+
             section.addEventListener('mouseleave', () => {
                 section.style.animation = '';
             });
@@ -1841,11 +1996,11 @@ class Calculator {
     // Effet de morphing pour les grilles de fonctionnalités
     initializeFeatureGridMorphing() {
         const featureGrids = document.querySelectorAll('.feature-grid');
-        featureGrids.forEach(grid => {
+        featureGrids.forEach((grid) => {
             grid.addEventListener('mouseenter', () => {
                 grid.style.animation = 'morphing 8s ease-in-out infinite';
             });
-            
+
             grid.addEventListener('mouseleave', () => {
                 grid.style.animation = '';
             });
@@ -1855,11 +2010,11 @@ class Calculator {
     // Animation de pulse pour les badges technologiques
     initializeTechBadgePulse() {
         const techBadges = document.querySelectorAll('.tech-badge');
-        techBadges.forEach(badge => {
+        techBadges.forEach((badge) => {
             badge.addEventListener('mouseenter', () => {
                 badge.style.animation = 'pulseActive 0.5s ease-in-out';
             });
-            
+
             badge.addEventListener('animationend', () => {
                 badge.style.animation = '';
             });
@@ -1869,11 +2024,11 @@ class Calculator {
     // Effet de néon pour les liens de navigation
     initializeNavLinkNeon() {
         const navLinks = document.querySelectorAll('.demo-button');
-        navLinks.forEach(link => {
+        navLinks.forEach((link) => {
             link.addEventListener('mouseenter', () => {
                 link.style.animation = 'neonGlow 1.5s ease-in-out infinite';
             });
-            
+
             link.addEventListener('mouseleave', () => {
                 link.style.animation = '';
             });
@@ -1883,11 +2038,11 @@ class Calculator {
     // Animation de rotation pour les icônes de démonstration
     initializeDemoIconRotation() {
         const demoIcons = document.querySelectorAll('.demo-button i');
-        demoIcons.forEach(icon => {
+        demoIcons.forEach((icon) => {
             icon.addEventListener('mouseenter', () => {
                 icon.style.animation = 'rotate3D 0.8s ease-in-out';
             });
-            
+
             icon.addEventListener('animationend', () => {
                 icon.style.animation = '';
             });
@@ -1946,7 +2101,7 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', () => {
     const calculator = new Calculator();
     calculator.init();
-    
+
     // Exposition globale pour le débogage
     window.calculator = calculator;
 });

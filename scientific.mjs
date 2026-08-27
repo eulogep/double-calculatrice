@@ -10,7 +10,11 @@ function factorial(n) {
 }
 
 function evaluateScientificExpression(expression) {
-    if (typeof expression !== 'string' || !expression.trim() || !/^[0-9+\-*/^().\s]+$/.test(expression)) {
+    if (
+        typeof expression !== 'string' ||
+        !expression.trim() ||
+        !/^[0-9+\-*/^().\s]+$/.test(expression)
+    ) {
         throw new Error('Expression non autorisée');
     }
 

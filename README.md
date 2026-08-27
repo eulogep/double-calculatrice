@@ -3,6 +3,7 @@
 > **Application web moderne et professionnelle développée avec les dernières technologies pour impressionner les recruteurs**
 
 [![Tests unitaires](https://github.com/eulogep/double-calculatrice/actions/workflows/tests.yml/badge.svg)](https://github.com/eulogep/double-calculatrice/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/eulogep/double-calculatrice/branch/main/graph/badge.svg)](https://codecov.io/gh/eulogep/double-calculatrice)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -351,3 +352,23 @@ npm test
 ```
 
 Le workflow GitHub Actions `Tests unitaires` exécute automatiquement `npm ci` puis `npm test -- --coverage` sur chaque push et chaque pull request. Les résultats et la couverture sont ainsi vérifiés avant toute intégration dans la branche principale.
+
+
+## Formatage du code
+
+Prettier est configuré pour appliquer automatiquement le style du projet aux modules JavaScript, aux tests, aux fichiers JSON et aux workflows GitHub Actions.
+
+```bash
+npm run format       # formater les fichiers
+npm run format:check # vérifier le formatage sans modifier les fichiers
+```
+
+## Exécution avec Docker
+
+L’application peut être servie par Nginx dans un conteneur léger. Docker doit être installé sur la machine hôte.
+
+```bash
+docker compose up --build
+```
+
+La calculatrice est alors accessible à l’adresse [http://localhost:8080](http://localhost:8080). Pour arrêter le service, utilisez `docker compose down`.
