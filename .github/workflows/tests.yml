@@ -40,6 +40,9 @@ jobs:
             - name: Exécuter les tests unitaires
               run: npm test -- --coverage
 
+            - name: Tester la charge du module scientifique
+              run: npm run test:load
+
             - name: Installer Chromium pour Playwright
               run: npx playwright install --with-deps chromium
 

@@ -4,6 +4,7 @@
 
 [![Tests unitaires](https://github.com/eulogep/double-calculatrice/actions/workflows/tests.yml/badge.svg)](https://github.com/eulogep/double-calculatrice/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/eulogep/double-calculatrice/branch/main/graph/badge.svg)](https://codecov.io/gh/eulogep/double-calculatrice)
+[![Dependabot](https://img.shields.io/badge/Dependabot-activ%C3%A9-025E8C?logo=dependabot&logoColor=white)](https://github.com/eulogep/double-calculatrice/security/dependabot)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -399,3 +400,18 @@ Lighthouse CI audite automatiquement la page d’accueil dans Chromium. L’audi
 ```bash
 npm run test:lighthouse
 ```
+
+
+## Test de charge du module scientifique
+
+Le test de charge évalue **100 000 expressions scientifiques** représentant des opérations, parenthèses, puissances, décimales et signes unaires. Chaque résultat est vérifié ; le test échoue si l’exécution dépasse cinq secondes. Il est lancé automatiquement dans l’intégration continue.
+
+```bash
+npm run test:load
+```
+
+Les variables `LOAD_TEST_ITERATIONS` et `LOAD_TEST_MAX_MS` permettent d’augmenter la sollicitation ou d’ajuster le seuil lors d’une analyse locale.
+
+## Surveillance des dépendances
+
+Dependabot vérifie chaque semaine les dépendances npm et les GitHub Actions déclarées dans le dépôt. Les propositions de mise à jour sont étiquetées selon leur catégorie et utilisent des messages de commit compatibles avec la convention de release. La configuration se trouve dans `.github/dependabot.yml`, et les alertes de sécurité sont accessibles depuis le badge Dependabot en tête de ce document.
