@@ -352,7 +352,7 @@ npm install
 npm test
 ```
 
-Le workflow GitHub Actions `Tests unitaires` exécute automatiquement `npm ci` puis `npm test -- --coverage` sur chaque push et chaque pull request. Les résultats et la couverture sont ainsi vérifiés avant toute intégration dans la branche principale.
+Le workflow GitHub Actions `Tests unitaires` exécute automatiquement `npm ci --ignore-scripts` puis `npm test -- --coverage` sur chaque push et chaque pull request. Les dépendances installées suivent le lockfile sans exécuter de scripts de cycle de vie implicites ; les résultats et la couverture sont ainsi vérifiés avant toute intégration dans la branche principale.
 
 
 ## Formatage du code
@@ -377,10 +377,11 @@ La calculatrice est alors accessible à l’adresse [http://localhost:8080](http
 
 ## Tests E2E
 
-Les parcours principaux de l’interface sont testés avec Playwright sur Chromium : calcul standard, calcul scientifique, conversion d’unités et persistance des paramètres.
+Les parcours principaux de l’interface sont testés avec Playwright sur Chromium : calcul standard, calcul scientifique, calcul financier à taux nul, raccourci clavier de mode, conversion d’unités et persistance des paramètres.
 
 ```bash
-npx playwright install chromium
+npm ci
+./node_modules/.bin/playwright install chromium
 npm run test:e2e
 ```
 
@@ -411,6 +412,15 @@ npm run test:load
 ```
 
 Les variables `LOAD_TEST_ITERATIONS` et `LOAD_TEST_MAX_MS` permettent d’augmenter la sollicitation ou d’ajuster le seuil lors d’une analyse locale.
+
+## Refactoring JavaScript assisté
+
+Le script `scripts/refactor-sonar-js.mjs` cible trois zones à forte complexité : les raccourcis clavier, les calculs financiers et la gestion des touches standard. Il extrait les responsabilités en méthodes nommées, centralise les formules financières répétées et reste idempotent. Le contrôle est non destructif ; l’application doit être suivie d’une revue du diff et de l’exécution complète des tests.
+
+```bash
+npm run refactor:sonar:js:check # prévisualiser sans modifier
+npm run refactor:sonar:js       # appliquer les extractions ciblées
+```
 
 ## Surveillance des dépendances
 

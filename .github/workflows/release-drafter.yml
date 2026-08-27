@@ -7,17 +7,19 @@ on:
         types: [opened, reopened, synchronize, edited]
 
 permissions:
-    contents: write
-    pull-requests: write
+    contents: read
 
 jobs:
     label-pull-request:
         if: github.event_name == 'pull_request_target'
         name: Étiqueter la pull request
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
         steps:
             - name: Appliquer les labels de changelog
-              uses: release-drafter/release-drafter/autolabeler@v7.7.0
+              uses: release-drafter/release-drafter/autolabeler@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
               with:
                   config-name: release-drafter.yml
 
@@ -25,8 +27,11 @@ jobs:
         if: github.event_name == 'push'
         name: Préparer le changelog de release
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: read
         steps:
             - name: Mettre à jour le brouillon de release
-              uses: release-drafter/release-drafter@v7.7.0
+              uses: release-drafter/release-drafter@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
               with:
                   config-name: release-drafter.yml

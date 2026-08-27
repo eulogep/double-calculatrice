@@ -20,16 +20,16 @@ jobs:
 
         steps:
             - name: Récupérer le dépôt
-              uses: actions/checkout@v4
+              uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
             - name: Configurer Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
               with:
                   node-version: 20
                   cache: npm
 
-            - name: Installer les dépendances
-              run: npm ci
+            - name: Installer les dépendances sans scripts implicites
+              run: npm ci --ignore-scripts
 
             - name: Vérifier le formatage
               run: npm run format:check
@@ -47,7 +47,7 @@ jobs:
               run: npm run test:load
 
             - name: Installer Chromium pour Playwright
-              run: npx playwright install --with-deps chromium
+              run: ./node_modules/.bin/playwright install --with-deps chromium
 
             - name: Exécuter les tests E2E
               run: npm run test:e2e
@@ -57,7 +57,7 @@ jobs:
 
             - name: Archiver les rapports Lighthouse
               if: always()
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
                   name: lighthouse-reports
                   path: .lighthouseci
@@ -66,7 +66,7 @@ jobs:
                   retention-days: 14
 
             - name: Publier la couverture sur Codecov
-              uses: codecov/codecov-action@v5
+              uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
               with:
                   files: ./coverage/lcov.info
                   flags: unittests

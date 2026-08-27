@@ -36,6 +36,26 @@ test.describe('Calculatrice Pro', () => {
         await expect(scientificInput).toHaveValue('0');
     });
 
+    test('calcule un paiement financier avec un taux nul', async ({ page }) => {
+        await page.goto('/index.html');
+        await page.locator('.mode-btn[data-mode="financial"]').click();
+        await page.locator('#pv-input').fill('1200');
+        await page.locator('#rate-input').fill('0');
+        await page.locator('#nper-input').fill('1');
+        await page.locator('#pmt-input').fill('0');
+        await page.locator('.fin-btn[data-func="pmt"]').click();
+
+        await expect(page.locator('.fin-input')).toHaveValue('100');
+    });
+
+    test('active le mode scientifique avec le raccourci clavier', async ({ page }) => {
+        await page.goto('/index.html');
+        await page.keyboard.press('Control+M');
+
+        await expect(page.locator('.mode-btn[data-mode="scientific"]')).toHaveClass(/active/);
+        await expect(page.locator('#scientific-mode')).toHaveClass(/active/);
+    });
+
     test('convertit une longueur en conservant le résultat affiché', async ({ page }) => {
         await page.goto('/index.html');
         await page.locator('.mode-btn[data-mode="converter"]').click();

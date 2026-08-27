@@ -355,134 +355,112 @@ class Calculator {
     }
 
     bindKeyboardEvents() {
-        document.addEventListener('keydown', (e) => {
-            const isEditable =
-                ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) ||
-                e.target.isContentEditable;
-            if (isEditable) return;
+        document.addEventListener('keydown', (event) => {
+            const { key } = event;
+            const shortcutKey = key.toLowerCase();
+            if (this.isEditableKeyboardTarget(event.target)) return;
 
-            const key = e.key;
+            this.handleStandardKeyboardInput(key);
 
-            // Nombres et opérateurs
-            if (/[0-9.]/.test(key)) {
-                this.handleKeyPress(key, this.currentField);
-            } else if (['+', '-', '*', '/'].includes(key)) {
-                this.selectedOperator = key;
-                this.updateOperatorButtons();
-            } else if (key === 'Enter' || key === '=') {
-                this.calculateStandard();
-            } else if (key === 'Escape') {
-                this.clearAll();
-            } else if (key === 'Backspace') {
-                this.handleKeyPress('Del', this.currentField);
+            if (event.ctrlKey) {
+                event.preventDefault();
+                this.handleControlShortcut(shortcutKey);
             }
 
-            // Raccourcis clavier avancés
-            if (e.ctrlKey) {
-                e.preventDefault();
-                switch (key) {
-                    case 's':
-                        this.saveState();
-                        break;
-                    case 'l':
-                        this.loadState();
-                        break;
-                    case 'e':
-                        this.exportData();
-                        break;
-                    case 'd':
-                        this.toggleTheme();
-                        break;
-                    case 'm':
-                        this.switchMode('scientific');
-                        break;
-                    case 'f':
-                        this.switchMode('financial');
-                        break;
-                    case 'c':
-                        this.switchMode('converter');
-                        break;
-                    case 'h':
-                        this.toggleHistory();
-                        break;
-                    case '1':
-                        this.switchMode('standard');
-                        break;
-                    case '2':
-                        this.switchMode('scientific');
-                        break;
-                    case '3':
-                        this.switchMode('financial');
-                        break;
-                    case '4':
-                        this.switchMode('converter');
-                        break;
-                }
-            }
-
-            // Raccourcis pour les fonctions scientifiques
-            if (this.currentMode === 'scientific') {
-                switch (key) {
-                    case 's':
-                        if (!e.ctrlKey) this.handleScientificFunction('sin');
-                        break;
-                    case 'c':
-                        if (!e.ctrlKey) this.handleScientificFunction('cos');
-                        break;
-                    case 't':
-                        if (!e.ctrlKey) this.handleScientificFunction('tan');
-                        break;
-                    case 'l':
-                        if (!e.ctrlKey) this.handleScientificFunction('log');
-                        break;
-                    case 'n':
-                        if (!e.ctrlKey) this.handleScientificFunction('ln');
-                        break;
-                    case 'r':
-                        if (!e.ctrlKey) this.handleScientificFunction('sqrt');
-                        break;
-                    case 'a':
-                        if (!e.ctrlKey) this.handleScientificFunction('abs');
-                        break;
-                    case 'p':
-                        if (!e.ctrlKey) this.handleScientificFunction('pi');
-                        break;
-                    case 'e':
-                        if (!e.ctrlKey) this.handleScientificFunction('e');
-                        break;
-                }
-            }
-
-            // Raccourcis pour les fonctions financières
-            if (this.currentMode === 'financial') {
-                switch (key) {
-                    case 'v':
-                        this.calculateFinancial('pv');
-                        break;
-                    case 'f':
-                        this.calculateFinancial('fv');
-                        break;
-                    case 'p':
-                        this.calculateFinancial('pmt');
-                        break;
-                    case 'r':
-                        this.calculateFinancial('rate');
-                        break;
-                    case 'n':
-                        this.calculateFinancial('nper');
-                        break;
-                    case 'i':
-                        this.calculateFinancial('irr');
-                        break;
-                    case 'w':
-                        this.calculateFinancial('npv');
-                        break;
-                    case 'o':
-                        this.calculateFinancial('roi');
-                        break;
-                }
-            }
+            this.handleModeKeyboardShortcut(shortcutKey, event.ctrlKey);
         });
+    }
+
+    isEditableKeyboardTarget(target) {
+        return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable;
+    }
+
+    handleStandardKeyboardInput(key) {
+        if (/[0-9.]/.test(key)) {
+            this.handleKeyPress(key, this.currentField);
+            return;
+        }
+
+        if (['+', '-', '*', '/'].includes(key)) {
+            this.selectedOperator = key;
+            this.updateOperatorButtons();
+            return;
+        }
+
+        if (key === 'Enter' || key === '=') {
+            this.calculateStandard();
+            return;
+        }
+
+        if (key === 'Escape') {
+            this.clearAll();
+            return;
+        }
+
+        if (key === 'Backspace') {
+            this.handleKeyPress('Del', this.currentField);
+        }
+    }
+
+    handleControlShortcut(key) {
+        const shortcuts = {
+            s: () => this.saveState(),
+            l: () => this.loadState(),
+            e: () => this.exportData(),
+            d: () => this.toggleTheme(),
+            m: () => this.switchMode('scientific'),
+            f: () => this.switchMode('financial'),
+            c: () => this.switchMode('converter'),
+            h: () => this.toggleHistory(),
+            1: () => this.switchMode('standard'),
+            2: () => this.switchMode('scientific'),
+            3: () => this.switchMode('financial'),
+            4: () => this.switchMode('converter')
+        };
+        shortcuts[key]?.();
+    }
+
+    handleModeKeyboardShortcut(key, hasControlKey) {
+        if (this.currentMode === 'scientific') {
+            this.handleScientificKeyboardShortcut(key, hasControlKey);
+        }
+
+        if (this.currentMode === 'financial') {
+            this.handleFinancialKeyboardShortcut(key);
+        }
+    }
+
+    handleScientificKeyboardShortcut(key, hasControlKey) {
+        if (hasControlKey) return;
+
+        const functions = {
+            s: 'sin',
+            c: 'cos',
+            t: 'tan',
+            l: 'log',
+            n: 'ln',
+            r: 'sqrt',
+            a: 'abs',
+            p: 'pi',
+            e: 'e'
+        };
+        const func = functions[key];
+        if (func) this.handleScientificFunction(func);
+    }
+
+    handleFinancialKeyboardShortcut(key) {
+        const functions = {
+            v: 'pv',
+            f: 'fv',
+            p: 'pmt',
+            r: 'rate',
+            n: 'nper',
+            i: 'irr',
+            w: 'npv',
+            o: 'roi'
+        };
+        const func = functions[key];
+        if (func) this.calculateFinancial(func);
     }
 
     // Méthodes de calcul
@@ -561,88 +539,8 @@ class Calculator {
     }
 
     calculateFinancial(func) {
-        const readValue = (input) => Number.parseFloat(input?.value);
-        const pv = readValue(this.finInputs.pv);
-        const rate = readValue(this.finInputs.rate);
-        const nper = readValue(this.finInputs.nper);
-        const pmt = readValue(this.finInputs.pmt);
-        const values = [pv, rate, nper, pmt].map((value) => (Number.isFinite(value) ? value : 0));
-        const [initialCapital, annualRate, periods, payment] = values;
-
-        const r = annualRate / 100 / 12; // Taux mensuel
-        const n = periods * 12; // Nombre de périodes mensuelles
-        const annuityFactor = r === 0 ? n : (1 - Math.pow(1 + r, -n)) / r;
-
-        let result;
-
-        switch (func) {
-            case 'pv':
-                result = payment * annuityFactor;
-                break;
-            case 'fv':
-                result =
-                    initialCapital * Math.pow(1 + r, n) +
-                    payment * (r === 0 ? n : (Math.pow(1 + r, n) - 1) / r);
-                break;
-            case 'pmt':
-                result =
-                    r === 0
-                        ? n === 0
-                            ? NaN
-                            : initialCapital / n
-                        : initialCapital / ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
-                break;
-            case 'rate':
-                result =
-                    n > 0 && initialCapital + payment * n > 0
-                        ? (Math.pow(
-                              (initialCapital + payment * n) /
-                                  Math.max(initialCapital, Number.EPSILON),
-                              1 / n
-                          ) -
-                              1) *
-                          12 *
-                          100
-                        : NaN;
-                break;
-            case 'nper':
-                result =
-                    r === 0
-                        ? payment === 0
-                            ? NaN
-                            : -initialCapital / payment
-                        : Math.log(payment / (payment - initialCapital * r)) / Math.log(1 + r);
-                break;
-            case 'irr':
-                result =
-                    n > 0 && initialCapital + payment * n > 0
-                        ? (Math.pow(
-                              (initialCapital + payment * n) /
-                                  Math.max(initialCapital, Number.EPSILON),
-                              1 / n
-                          ) -
-                              1) *
-                          100
-                        : NaN;
-                break;
-            case 'npv':
-                result = initialCapital + payment * annuityFactor;
-                break;
-            case 'roi':
-                result =
-                    initialCapital === 0
-                        ? NaN
-                        : ((payment * n - initialCapital) / Math.abs(initialCapital)) * 100;
-                break;
-            case 'compound':
-                result = initialCapital * Math.pow(1 + r, n);
-                break;
-            case 'simple':
-                result = initialCapital * (1 + r * n);
-                break;
-            default:
-                result = NaN;
-        }
+        const parameters = this.getFinancialParameters();
+        const result = this.calculateFinancialResult(func, parameters);
 
         if (!Number.isFinite(result)) {
             this.finInput.value = 'Erreur';
@@ -653,6 +551,102 @@ class Calculator {
         const formattedResult = this.formatNumber(result);
         this.finInput.value = formattedResult;
         this.addToHistory(`Fin: ${func.toUpperCase()} = ${formattedResult}`);
+    }
+
+    getFinancialParameters() {
+        const readValue = (input) => Number.parseFloat(input?.value);
+        const values = [
+            readValue(this.finInputs.pv),
+            readValue(this.finInputs.rate),
+            readValue(this.finInputs.nper),
+            readValue(this.finInputs.pmt)
+        ].map((value) => (Number.isFinite(value) ? value : 0));
+        const [initialCapital, annualRate, periods, payment] = values;
+        const monthlyRate = annualRate / 100 / 12;
+        const totalPeriods = periods * 12;
+
+        return {
+            initialCapital,
+            payment,
+            monthlyRate,
+            totalPeriods,
+            annuityFactor: this.calculateAnnuityFactor(monthlyRate, totalPeriods)
+        };
+    }
+
+    calculateAnnuityFactor(monthlyRate, totalPeriods) {
+        if (monthlyRate === 0) return totalPeriods;
+        return (1 - Math.pow(1 + monthlyRate, -totalPeriods)) / monthlyRate;
+    }
+
+    calculateFinancialResult(func, parameters) {
+        const calculators = {
+            pv: () => parameters.payment * parameters.annuityFactor,
+            fv: () => this.calculateFutureValue(parameters),
+            pmt: () => this.calculatePayment(parameters),
+            rate: () => this.calculateCashFlowRate(parameters, 12),
+            nper: () => this.calculatePeriodCount(parameters),
+            irr: () => this.calculateCashFlowRate(parameters, 1),
+            npv: () => parameters.initialCapital + parameters.payment * parameters.annuityFactor,
+            roi: () => this.calculateReturnOnInvestment(parameters),
+            compound: () =>
+                parameters.initialCapital *
+                Math.pow(1 + parameters.monthlyRate, parameters.totalPeriods),
+            simple: () =>
+                parameters.initialCapital * (1 + parameters.monthlyRate * parameters.totalPeriods)
+        };
+        const calculator = calculators[func];
+        return calculator ? calculator() : Number.NaN;
+    }
+
+    calculateFutureValue({ initialCapital, payment, monthlyRate, totalPeriods }) {
+        const paymentFactor =
+            monthlyRate === 0
+                ? totalPeriods
+                : (Math.pow(1 + monthlyRate, totalPeriods) - 1) / monthlyRate;
+        return initialCapital * Math.pow(1 + monthlyRate, totalPeriods) + payment * paymentFactor;
+    }
+
+    calculatePayment({ initialCapital, monthlyRate, totalPeriods }) {
+        if (monthlyRate === 0) {
+            if (totalPeriods === 0) return Number.NaN;
+            return initialCapital / totalPeriods;
+        }
+
+        const paymentFactor =
+            (Math.pow(1 + monthlyRate, totalPeriods) - 1) /
+            (monthlyRate * Math.pow(1 + monthlyRate, totalPeriods));
+        return initialCapital / paymentFactor;
+    }
+
+    calculateCashFlowRate({ initialCapital, payment, totalPeriods }, annualizationMultiplier) {
+        if (totalPeriods <= 0 || initialCapital + payment * totalPeriods <= 0) {
+            return Number.NaN;
+        }
+
+        const periodicRate =
+            Math.pow(
+                (initialCapital + payment * totalPeriods) /
+                    Math.max(initialCapital, Number.EPSILON),
+                1 / totalPeriods
+            ) - 1;
+        return periodicRate * annualizationMultiplier * 100;
+    }
+
+    calculatePeriodCount({ initialCapital, payment, monthlyRate }) {
+        if (monthlyRate === 0) {
+            if (payment === 0) return Number.NaN;
+            return -initialCapital / payment;
+        }
+
+        return (
+            Math.log(payment / (payment - initialCapital * monthlyRate)) / Math.log(1 + monthlyRate)
+        );
+    }
+
+    calculateReturnOnInvestment({ initialCapital, payment, totalPeriods }) {
+        if (initialCapital === 0) return Number.NaN;
+        return ((payment * totalPeriods - initialCapital) / Math.abs(initialCapital)) * 100;
     }
 
     // Méthodes de conversion
@@ -774,34 +768,37 @@ class Calculator {
     handleKeyPress(key, input) {
         if (!key || !input) return;
 
-        if (key === 'C') {
-            input.value = '0';
-            if (this.resultElt) this.resultElt.textContent = '0';
-            return;
-        }
-
-        if (key === 'Del') {
-            input.value = input.value.length > 1 ? input.value.slice(0, -1) : '0';
-            return;
-        }
-
-        if (key === '±') {
-            input.value = input.value.startsWith('-') ? input.value.slice(1) : '-' + input.value;
-            return;
-        }
-
-        if (key === '%') {
-            input.value = this.formatNumber(parseFloat(input.value) / 100);
+        const specialKeyHandlers = {
+            C: () => this.clearCalculatorInput(input),
+            Del: () => this.deleteCalculatorDigit(input),
+            '±': () => this.toggleCalculatorSign(input),
+            '%': () => this.convertCalculatorPercentage(input)
+        };
+        const specialKeyHandler = specialKeyHandlers[key];
+        if (specialKeyHandler) {
+            specialKeyHandler();
             return;
         }
 
         if (key === '.' && input.value.includes('.')) return;
+        input.value = input.value === '0' && key !== '.' ? key : input.value + key;
+    }
 
-        if (input.value === '0' && key !== '.') {
-            input.value = key;
-        } else {
-            input.value += key;
-        }
+    clearCalculatorInput(input) {
+        input.value = '0';
+        if (this.resultElt) this.resultElt.textContent = '0';
+    }
+
+    deleteCalculatorDigit(input) {
+        input.value = input.value.length > 1 ? input.value.slice(0, -1) : '0';
+    }
+
+    toggleCalculatorSign(input) {
+        input.value = input.value.startsWith('-') ? input.value.slice(1) : `-${input.value}`;
+    }
+
+    convertCalculatorPercentage(input) {
+        input.value = this.formatNumber(Number.parseFloat(input.value) / 100);
     }
 
     handleScientificKeyPress(key) {

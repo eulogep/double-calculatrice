@@ -14,7 +14,9 @@
         "test:e2e": "playwright test",
         "test:e2e:ui": "playwright test --ui",
         "test:lighthouse": "lhci autorun",
-        "test:load": "node tests/load/scientific-load.mjs"
+        "test:load": "node tests/load/scientific-load.mjs",
+        "refactor:sonar:js:check": "node scripts/refactor-sonar-js.mjs --check",
+        "refactor:sonar:js": "node scripts/refactor-sonar-js.mjs --apply"
     },
     "author": "",
     "license": "MIT",
