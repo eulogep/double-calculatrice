@@ -390,3 +390,12 @@ La configuration se trouve dans `playwright.config.mjs` et les scénarios dans `
 Les commits suivant la convention Conventional Commits déclenchent Semantic Release sur `main`. Les commits `fix:` produisent une version corrective, `feat:` une version mineure et les changements incompatibles signalés par `BREAKING CHANGE` une version majeure. La configuration se trouve dans `release.config.cjs`, tandis que `.github/workflows/release.yml` crée automatiquement la release GitHub et ses notes.
 
 Chaque push sur `main` déclenche également `.github/workflows/deploy.yml`, qui prépare les fichiers statiques et les publie avec le déploiement officiel GitHub Pages. Le site peut être lancé localement avec Docker grâce à `docker compose up --build`.
+
+
+## Audits de performance et d’accessibilité
+
+Lighthouse CI audite automatiquement la page d’accueil dans Chromium. L’audit impose un score d’accessibilité minimal de 90/100 et signale toute baisse sous 70/100 en performance. Les rapports sont conservés quatorze jours dans les artefacts du workflow GitHub Actions.
+
+```bash
+npm run test:lighthouse
+```

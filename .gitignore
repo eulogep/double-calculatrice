@@ -200,3 +200,6 @@ out/
 # Playwright reports and temporary results
 playwright-report/
 test-results/
+
+# Lighthouse CI reports
+.lighthouseci/
