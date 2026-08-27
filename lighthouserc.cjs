@@ -11,7 +11,7 @@ module.exports = {
             chromePath: chromium.executablePath(),
             settings: {
                 onlyCategories: ['performance', 'accessibility'],
-                chromeFlags: ['--no-sandbox', '--disable-setuid-sandbox']
+                chromeFlags: '--no-sandbox --disable-setuid-sandbox'
             }
         },
         assert: {
