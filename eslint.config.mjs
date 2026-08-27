@@ -13,6 +13,7 @@ export default [
             sourceType: 'module',
             globals: {
                 ...globals.browser,
+                ...globals.node,
                 AdvancedFeatures: 'readonly',
                 Chart: 'readonly',
                 CustomizationFeatures: 'readonly',

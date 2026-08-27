@@ -1,0 +1,41 @@
+name: Release automatique
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    issues: write
+    pull-requests: write
+
+concurrency:
+    group: release-main
+    cancel-in-progress: false
+
+jobs:
+    release:
+        name: Semantic Release
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Récupérer le dépôt
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Configurer Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            - name: Installer les dépendances
+              run: npm ci
+
+            - name: Exécuter Semantic Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: npx semantic-release

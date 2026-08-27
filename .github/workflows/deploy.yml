@@ -1,10 +1,9 @@
-name: Deploy to GitHub Pages
+name: Déploiement GitHub Pages
 
 on:
     push:
         branches: [main]
-    pull_request:
-        branches: [main]
+    workflow_dispatch:
 
 permissions:
     contents: read
@@ -12,36 +11,34 @@ permissions:
     id-token: write
 
 concurrency:
-    group: 'pages'
+    group: pages
     cancel-in-progress: false
 
 jobs:
-    build:
+    deploy:
+        name: Publier la calculatrice
         runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
         steps:
-            - name: Checkout
+            - name: Récupérer le dépôt
               uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '18'
-                  cache: 'npm'
+            - name: Configurer GitHub Pages
+              uses: actions/configure-pages@v5
 
-            - name: Install dependencies (if any)
+            - name: Préparer l’artefact statique
               run: |
-                  # Si vous avez un package.json, décommentez la ligne suivante
-                  # npm ci
+                  mkdir -p _site
+                  cp index.html 404.html demo.html main.js advanced-features.js scientific.mjs style.css logo-esiea.png robots.txt sitemap.xml CNAME _site/
 
-            - name: Deploy to GitHub Pages
-              uses: peaceiris/actions-gh-pages@v3
-              if: github.ref == 'refs/heads/main'
+            - name: Charger l’artefact Pages
+              uses: actions/upload-pages-artifact@v3
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./double-calculator
-                  publish_branch: gh-pages
-                  cname: # Optionnel: ajoutez votre domaine personnalisé ici
-                  force_orphan: true
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: '🚀 Deploy: ${{ github.sha }} - Calculatrice Pro ESIEA'
+                  path: _site
+
+            - name: Déployer sur GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

@@ -1,4 +1,4 @@
-name: Tests unitaires
+name: Tests et qualité
 
 on:
     push:
@@ -14,9 +14,9 @@ concurrency:
 
 jobs:
     unit-tests:
-        name: Jest et ESLint sur Node.js 20
+        name: Tests et lint sur Node.js 20
         runs-on: ubuntu-latest
-        timeout-minutes: 10
+        timeout-minutes: 15
 
         steps:
             - name: Récupérer le dépôt
@@ -39,6 +39,12 @@ jobs:
 
             - name: Exécuter les tests unitaires
               run: npm test -- --coverage
+
+            - name: Installer Chromium pour Playwright
+              run: npx playwright install --with-deps chromium
+
+            - name: Exécuter les tests E2E
+              run: npm run test:e2e
 
             - name: Publier la couverture sur Codecov
               uses: codecov/codecov-action@v5

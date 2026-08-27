@@ -372,3 +372,21 @@ docker compose up --build
 ```
 
 La calculatrice est alors accessible à l’adresse [http://localhost:8080](http://localhost:8080). Pour arrêter le service, utilisez `docker compose down`.
+
+
+## Tests E2E
+
+Les parcours principaux de l’interface sont testés avec Playwright sur Chromium : calcul standard, calcul scientifique, conversion d’unités et persistance des paramètres.
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+La configuration se trouve dans `playwright.config.mjs` et les scénarios dans `tests/e2e/`. Le workflow CI installe Chromium avec ses dépendances système avant d’exécuter les tests.
+
+## Releases et déploiement continu
+
+Les commits suivant la convention Conventional Commits déclenchent Semantic Release sur `main`. Les commits `fix:` produisent une version corrective, `feat:` une version mineure et les changements incompatibles signalés par `BREAKING CHANGE` une version majeure. La configuration se trouve dans `release.config.cjs`, tandis que `.github/workflows/release.yml` crée automatiquement la release GitHub et ses notes.
+
+Chaque push sur `main` déclenche également `.github/workflows/deploy.yml`, qui prépare les fichiers statiques et les publie avec le déploiement officiel GitHub Pages. Le site peut être lancé localement avec Docker grâce à `docker compose up --build`.
