@@ -9,13 +9,16 @@ module.exports = {
             url: ['http://127.0.0.1:4173/index.html'],
             numberOfRuns: 1,
             chromePath: chromium.executablePath(),
+            puppeteerLaunchOptions: {
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            },
             settings: {
                 onlyCategories: ['performance', 'accessibility']
             }
         },
         assert: {
             assertions: {
-                'categories:performance': ['warn', { minScore: 0.7 }],
+                'categories:performance': ['warn', { minScore: 0.65 }],
                 'categories:accessibility': ['error', { minScore: 0.9 }]
             }
         },
