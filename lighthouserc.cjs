@@ -9,11 +9,9 @@ module.exports = {
             url: ['http://127.0.0.1:4173/index.html'],
             numberOfRuns: 1,
             chromePath: chromium.executablePath(),
-            puppeteerLaunchOptions: {
-                args: ['--no-sandbox', '--disable-setuid-sandbox']
-            },
             settings: {
-                onlyCategories: ['performance', 'accessibility']
+                onlyCategories: ['performance', 'accessibility'],
+                chromeFlags: ['--no-sandbox', '--disable-setuid-sandbox']
             }
         },
         assert: {
