@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Calculatrice Pro ESIEA - Euloge Mabiala</title>
+    <link rel="icon" href="logo-esiea.png" type="image/png">
 
     <link rel="stylesheet" href="style.css">
     <script src="main.js" type="module" defer></script>
@@ -35,17 +36,17 @@
     <div id="particles-js"></div>
     
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Navigation principale">
         <div class="nav-brand">
             <img src="logo-esiea.png" alt="ESIEA" class="nav-logo">
             <span>Calculatrice Pro</span>
         </div>
         <div class="nav-controls">
-            <button id="theme-toggle" class="theme-btn">
-                <i class="fas fa-moon"></i>
+            <button type="button" id="theme-toggle" class="theme-btn" aria-label="Changer de thème" title="Changer de thème">
+                <i class="fas fa-moon" aria-hidden="true"></i>
             </button>
-            <button id="settings-btn" class="settings-btn">
-                <i class="fas fa-cog"></i>
+            <button type="button" id="settings-btn" class="settings-btn" aria-label="Ouvrir les paramètres" title="Paramètres">
+                <i class="fas fa-cog" aria-hidden="true"></i>
             </button>
         </div>
     </nav>
@@ -66,20 +67,20 @@
     </header>
 
     <!-- Mode Selector -->
-    <div class="mode-selector">
-        <button class="mode-btn active" data-mode="standard">
+    <div class="mode-selector" role="tablist" aria-label="Modes de calcul">
+        <button type="button" class="mode-btn active" data-mode="standard" role="tab" aria-selected="true" aria-controls="standard-mode">
             <i class="fas fa-calculator"></i>
             Standard
         </button>
-        <button class="mode-btn" data-mode="scientific">
+        <button type="button" class="mode-btn" data-mode="scientific" role="tab" aria-selected="false" aria-controls="scientific-mode">
             <i class="fas fa-square-root-alt"></i>
             Scientifique
         </button>
-        <button class="mode-btn" data-mode="financial">
+        <button type="button" class="mode-btn" data-mode="financial" role="tab" aria-selected="false" aria-controls="financial-mode">
             <i class="fas fa-chart-line"></i>
             Financière
         </button>
-        <button class="mode-btn" data-mode="converter">
+        <button type="button" class="mode-btn" data-mode="converter" role="tab" aria-selected="false" aria-controls="converter-mode">
             <i class="fas fa-exchange-alt"></i>
             Convertisseur
         </button>
@@ -88,14 +89,14 @@
     <!-- Main Calculator -->
     <main class="calculator-container">
         <!-- Standard Mode -->
-        <div class="calculator-mode active" id="standard-mode">
+        <div class="calculator-mode active" id="standard-mode" role="tabpanel" aria-hidden="false" tabindex="-1">
             <div class="calculators-wrapper">
                 <!-- Calculator 1 -->
                 <section class="calculator" id="calc1">
                     <div class="calc-header">
                         <h3>Opérande 1</h3>
                         <div class="calc-display">
-                            <input class="operand operand1" readonly value="0" />
+                            <input class="operand operand1" aria-label="Premier opérande" inputmode="decimal" readonly value="0" />
                             <div class="calc-history"></div>
                         </div>
                     </div>
@@ -130,7 +131,7 @@
                     </div>
                     <button id="equals" class="equals">=</button>
                     <div class="result-container">
-                        <output id="result" class="result">0</output>
+                        <output id="result" class="result" aria-live="polite" aria-atomic="true">0</output>
                         <div class="result-history"></div>
                     </div>
                 </section>
@@ -140,7 +141,7 @@
                     <div class="calc-header">
                         <h3>Opérande 2</h3>
                         <div class="calc-display">
-                            <input class="operand operand2" readonly value="0" />
+                            <input class="operand operand2" aria-label="Deuxième opérande" inputmode="decimal" readonly value="0" />
                             <div class="calc-history"></div>
                         </div>
                     </div>
@@ -166,10 +167,10 @@
         </div>
 
         <!-- Scientific Mode -->
-        <div class="calculator-mode" id="scientific-mode">
+        <div class="calculator-mode" id="scientific-mode" role="tabpanel" aria-hidden="true" tabindex="-1">
             <div class="scientific-calculator">
                 <div class="sci-display">
-                    <input class="sci-input" readonly value="0" />
+                    <input class="sci-input" aria-label="Expression scientifique" inputmode="decimal" readonly value="0" />
                     <div class="sci-expression"></div>
                 </div>
                 <div class="sci-keypad">
@@ -209,10 +210,10 @@
         </div>
 
         <!-- Financial Mode -->
-        <div class="calculator-mode" id="financial-mode">
+        <div class="calculator-mode" id="financial-mode" role="tabpanel" aria-hidden="true" tabindex="-1">
             <div class="financial-calculator">
                 <div class="fin-display">
-                    <input class="fin-input" readonly value="0" />
+                    <input class="fin-input" aria-label="Résultat financier" readonly value="0" />
                 </div>
                 <div class="fin-functions">
                     <button class="fin-btn" data-func="pv">Valeur Présente</button>
@@ -228,48 +229,51 @@
                 </div>
                 <div class="fin-inputs">
                     <div class="fin-input-group">
-                        <label>Capital Initial</label>
-                        <input type="number" id="pv-input" placeholder="0">
+                        <label for="pv-input">Capital initial</label>
+                        <input type="number" id="pv-input" placeholder="0" inputmode="decimal">
                     </div>
                     <div class="fin-input-group">
-                        <label>Taux Annuel (%)</label>
-                        <input type="number" id="rate-input" placeholder="0">
+                        <label for="rate-input">Taux annuel (%)</label>
+                        <input type="number" id="rate-input" placeholder="0" inputmode="decimal">
                     </div>
                     <div class="fin-input-group">
-                        <label>Périodes</label>
-                        <input type="number" id="nper-input" placeholder="0">
+                        <label for="nper-input">Périodes</label>
+                        <input type="number" id="nper-input" placeholder="0" inputmode="decimal">
                     </div>
                     <div class="fin-input-group">
-                        <label>Paiement</label>
-                        <input type="number" id="pmt-input" placeholder="0">
+                        <label for="pmt-input">Paiement</label>
+                        <input type="number" id="pmt-input" placeholder="0" inputmode="decimal">
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Converter Mode -->
-        <div class="calculator-mode" id="converter-mode">
+        <div class="calculator-mode" id="converter-mode" role="tabpanel" aria-hidden="true" tabindex="-1">
             <div class="converter-calculator">
                 <div class="converter-selector">
                     <select id="conversion-type">
                         <option value="length">Longueur</option>
                         <option value="weight">Poids</option>
                         <option value="temperature">Température</option>
-                        <option value="currency">Devise</option>
                         <option value="area">Surface</option>
                         <option value="volume">Volume</option>
                     </select>
                 </div>
                 <div class="converter-inputs">
                     <div class="conv-input-group">
-                        <input type="number" id="from-value" placeholder="0">
+                        <label class="sr-only" for="from-value">Valeur à convertir</label>
+                        <input type="number" id="from-value" placeholder="0" inputmode="decimal">
+                        <label class="sr-only" for="from-unit">Unité de départ</label>
                         <select id="from-unit"></select>
                     </div>
                     <div class="conv-swap">
-                        <button id="swap-btn"><i class="fas fa-exchange-alt"></i></button>
+                        <button type="button" id="swap-btn" aria-label="Inverser les unités"><i class="fas fa-exchange-alt" aria-hidden="true"></i></button>
                     </div>
                     <div class="conv-input-group">
+                        <label class="sr-only" for="to-value">Résultat de la conversion</label>
                         <input type="number" id="to-value" placeholder="0" readonly>
+                        <label class="sr-only" for="to-unit">Unité d’arrivée</label>
                         <select id="to-unit"></select>
                     </div>
                 </div>
@@ -281,7 +285,7 @@
     <aside class="history-panel">
         <div class="history-header">
             <h3><i class="fas fa-history"></i> Historique</h3>
-            <button id="clear-history"><i class="fas fa-trash"></i></button>
+            <button type="button" id="clear-history" aria-label="Effacer l’historique" title="Effacer l’historique"><i class="fas fa-trash" aria-hidden="true"></i></button>
         </div>
         <div class="history-list"></div>
         <div class="history-chart">
@@ -294,7 +298,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Paramètres</h3>
-                <button class="modal-close">&times;</button>
+                <button type="button" class="modal-close" aria-label="Fermer">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="setting-group">
@@ -310,48 +314,53 @@
                     <input type="number" id="decimal-precision" min="0" max="10" value="2">
                 </div>
                 <div class="setting-group">
-                    <label>Animation</label>
+                    <label for="animations-enabled">Animations</label>
                     <input type="checkbox" id="animations-enabled" checked>
                 </div>
+                <button type="button" id="save-settings" class="action-btn">Enregistrer les paramètres</button>
             </div>
         </div>
     </div>
 
     <!-- Action Buttons -->
     <div class="action-buttons">
-        <button id="save-btn" class="action-btn">
+        <button type="button" id="save-btn" class="action-btn">
             <i class="fas fa-save"></i>
             Sauvegarder
         </button>
-        <button id="load-btn" class="action-btn">
+        <button type="button" id="load-btn" class="action-btn">
             <i class="fas fa-upload"></i>
             Charger
         </button>
-        <button id="export-btn" class="action-btn">
+        <button type="button" id="export-btn" class="action-btn">
             <i class="fas fa-download"></i>
             Exporter
         </button>
-        <button id="share-btn" class="action-btn">
+        <button type="button" id="share-btn" class="action-btn">
             <i class="fas fa-share"></i>
             Partager
         </button>
-        <button id="stats-btn" class="action-btn">
+        <button type="button" id="stats-btn" class="action-btn">
             <i class="fas fa-chart-bar"></i>
             Statistiques
         </button>
-        <button id="voice-btn" class="action-btn">
+        <button type="button" id="voice-btn" class="action-btn">
             <i class="fas fa-microphone"></i>
             Voix
         </button>
-        <button id="help-btn" class="action-btn">
+        <button type="button" id="help-btn" class="action-btn">
             <i class="fas fa-question-circle"></i>
             Aide
         </button>
-        <button id="demo-btn" class="action-btn">
+        <button type="button" id="demo-btn" class="action-btn">
             <i class="fas fa-play"></i>
             Démo
         </button>
     </div>
+
+    <noscript>
+        <p class="noscript-message">JavaScript est nécessaire pour utiliser la calculatrice.</p>
+    </noscript>
 
     <!-- Particles Configuration -->
     <script>

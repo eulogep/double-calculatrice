@@ -241,13 +241,6 @@ class Calculator {
     }
 
     bindHistoryEvents() {
-        // Bouton pour afficher/masquer l'historique
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'h') {
-                this.toggleHistory();
-            }
-        });
-        
         // Bouton pour effacer l'historique
         const clearHistoryBtn = document.querySelector('#clear-history');
         if (clearHistoryBtn) {
@@ -266,8 +259,16 @@ class Calculator {
             });
         }
         
+        const saveSettingsBtn = document.querySelector('#save-settings');
+        if (saveSettingsBtn) {
+            saveSettingsBtn.addEventListener('click', () => {
+                this.saveSettings();
+                this.hideSettings();
+            });
+        }
+
         // Fermeture de la modal
-        const modalClose = document.querySelector('.modal-close');
+        const modalClose = document.querySelector('#settings-modal .modal-close');
         if (modalClose) {
             modalClose.addEventListener('click', () => {
                 this.hideSettings();
@@ -354,7 +355,8 @@ class Calculator {
 
     bindKeyboardEvents() {
         document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT') return;
+            const isEditable = ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable;
+            if (isEditable) return;
             
             const key = e.key;
             
@@ -482,97 +484,200 @@ class Calculator {
 
     // Méthodes de calcul
     calculateStandard() {
-        const op1 = parseFloat(this.operand1.value) || 0;
-        const op2 = parseFloat(this.operand2.value) || 0;
-    let result;
+        const op1 = Number.parseFloat(this.operand1?.value);
+        const op2 = Number.parseFloat(this.operand2?.value);
+        const firstOperand = Number.isFinite(op1) ? op1 : 0;
+        const secondOperand = Number.isFinite(op2) ? op2 : 0;
+        let result;
 
         switch (this.selectedOperator) {
-        case '+': result = op1 + op2; break;
-        case '-': result = op1 - op2; break;
-        case '*': result = op1 * op2; break;
-        case '/': result = op2 !== 0 ? op1 / op2 : 'Erreur : division par 0'; break;
-            case '^': result = Math.pow(op1, op2); break;
-            case '√': result = Math.sqrt(op1); break;
-        default: result = op1 + op2;
-    }
-
-        if (typeof result === 'number') {
-            result = this.formatNumber(result);
+            case '+': result = firstOperand + secondOperand; break;
+            case '-': result = firstOperand - secondOperand; break;
+            case '*': result = firstOperand * secondOperand; break;
+            case '/':
+                if (secondOperand === 0) {
+                    this.displayResult('Erreur');
+                    this.showNotification('Impossible de diviser par zéro.');
+                    return;
+                }
+                result = firstOperand / secondOperand;
+                break;
+            case '^': result = Math.pow(firstOperand, secondOperand); break;
+            case '√':
+                if (firstOperand < 0) {
+                    this.displayResult('Erreur');
+                    this.showNotification('La racine carrée d’un nombre négatif est indéfinie.');
+                    return;
+                }
+                result = Math.sqrt(firstOperand);
+                break;
+            default: result = firstOperand + secondOperand;
         }
 
-        this.displayResult(result);
-        this.addToHistory(`${op1} ${this.selectedOperator} ${op2} = ${result}`);
-        
-        // Mettre à jour les statistiques
+        if (!Number.isFinite(result)) {
+            this.displayResult('Erreur');
+            this.showNotification('Le résultat n’est pas représentable.');
+            return;
+        }
+
+        const formattedResult = this.formatNumber(result);
+        const expression = `${firstOperand} ${this.selectedOperator} ${secondOperand}`;
+        this.displayResult(formattedResult);
+        this.addToHistory(`${expression} = ${formattedResult}`);
+
         if (this.statisticsFeatures) {
-            this.statisticsFeatures.addCalculation(`${op1} ${this.selectedOperator} ${op2}`, result);
+            this.statisticsFeatures.addCalculation(expression, formattedResult);
         }
     }
 
     calculateScientific() {
+        const expression = this.sciExpression.replace(/×/g, '*').replace(/÷/g, '/').trim();
+
         try {
-            const expression = this.sciExpression.replace(/×/g, '*').replace(/÷/g, '/');
-            const result = eval(expression);
+            const result = this.evaluateScientificExpression(expression);
+            if (!Number.isFinite(result)) throw new Error('Résultat invalide');
+
             this.sciResult = this.formatNumber(result);
             this.sciInput.value = this.sciResult;
+            this.sciExpression = String(this.sciResult);
             this.addToHistory(`Sci: ${expression} = ${this.sciResult}`);
         } catch (error) {
             this.sciInput.value = 'Erreur';
+            this.sciExpression = '';
+            this.showNotification('Expression scientifique invalide.');
         }
     }
 
+    evaluateScientificExpression(expression) {
+        if (!expression || !/^[0-9+\-*/^().\s]+$/.test(expression)) {
+            throw new Error('Expression non autorisée');
+        }
+
+        const tokens = expression.replace(/\s+/g, '').match(/(?:\d+(?:\.\d*)?|\.\d+|[()+\-*/^])/g);
+        const normalizedExpression = expression.replace(/\s+/g, '');
+        if (!tokens || tokens.join('') !== normalizedExpression) {
+            throw new Error('Expression invalide');
+        }
+
+        let position = 0;
+        const peek = () => tokens[position];
+        const consume = () => tokens[position++];
+
+        const parsePrimary = () => {
+            const token = peek();
+            if (token === '+') {
+                consume();
+                return parsePrimary();
+            }
+            if (token === '-') {
+                consume();
+                return -parsePrimary();
+            }
+            if (token === '(') {
+                consume();
+                const value = parseExpression();
+                if (consume() !== ')') throw new Error('Parenthèse manquante');
+                return value;
+            }
+            if (!token || !/^\d|^\.\d/.test(token)) throw new Error('Nombre attendu');
+            consume();
+            return Number(token);
+        };
+
+        const parsePower = () => {
+            const base = parsePrimary();
+            if (peek() === '^') {
+                consume();
+                return Math.pow(base, parsePower());
+            }
+            return base;
+        };
+
+        const parseTerm = () => {
+            let value = parsePower();
+            while (peek() === '*' || peek() === '/') {
+                const operator = consume();
+                const right = parsePower();
+                if (operator === '/' && right === 0) throw new Error('Division par zéro');
+                value = operator === '*' ? value * right : value / right;
+            }
+            return value;
+        };
+
+        const parseExpression = () => {
+            let value = parseTerm();
+            while (peek() === '+' || peek() === '-') {
+                const operator = consume();
+                const right = parseTerm();
+                value = operator === '+' ? value + right : value - right;
+            }
+            return value;
+        };
+
+        const result = parseExpression();
+        if (position !== tokens.length) throw new Error('Expression incomplète');
+        return result;
+    }
+
     calculateFinancial(func) {
-        const pv = parseFloat(this.finInputs.pv.value) || 0;
-        const rate = parseFloat(this.finInputs.rate.value) || 0;
-        const nper = parseFloat(this.finInputs.nper.value) || 0;
-        const pmt = parseFloat(this.finInputs.pmt.value) || 0;
-        
-        const r = rate / 100 / 12; // Taux mensuel
-        const n = nper * 12; // Nombre de périodes mensuelles
-        
+        const readValue = (input) => Number.parseFloat(input?.value);
+        const pv = readValue(this.finInputs.pv);
+        const rate = readValue(this.finInputs.rate);
+        const nper = readValue(this.finInputs.nper);
+        const pmt = readValue(this.finInputs.pmt);
+        const values = [pv, rate, nper, pmt].map(value => Number.isFinite(value) ? value : 0);
+        const [initialCapital, annualRate, periods, payment] = values;
+
+        const r = annualRate / 100 / 12; // Taux mensuel
+        const n = periods * 12; // Nombre de périodes mensuelles
+        const annuityFactor = r === 0 ? n : (1 - Math.pow(1 + r, -n)) / r;
+
         let result;
         
         switch (func) {
             case 'pv':
-                result = pmt * (1 - Math.pow(1 + r, -n)) / r;
+                result = payment * annuityFactor;
                 break;
             case 'fv':
-                result = pv * Math.pow(1 + r, n) + pmt * (Math.pow(1 + r, n) - 1) / r;
+                result = initialCapital * Math.pow(1 + r, n) + payment * (r === 0 ? n : (Math.pow(1 + r, n) - 1) / r);
                 break;
             case 'pmt':
-                result = (pv * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                result = r === 0 ? (n === 0 ? NaN : initialCapital / n) : initialCapital / ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
                 break;
             case 'rate':
-                // Approximation du taux
-                result = ((Math.pow(pv + pmt * n, 1/n) - 1) * 12 * 100);
+                result = n > 0 && initialCapital + payment * n > 0 ? (Math.pow((initialCapital + payment * n) / Math.max(initialCapital, Number.EPSILON), 1 / n) - 1) * 12 * 100 : NaN;
                 break;
             case 'nper':
-                result = Math.log((pmt - pv * r) / (pmt + pv * r)) / Math.log(1 + r);
+                result = r === 0 ? (payment === 0 ? NaN : -initialCapital / payment) : Math.log(payment / (payment - initialCapital * r)) / Math.log(1 + r);
                 break;
             case 'irr':
-                // TRI simplifié (Taux de Rentabilité Interne)
-                result = ((Math.pow(pv + pmt * n, 1/n) - 1) * 100);
+                result = n > 0 && initialCapital + payment * n > 0 ? (Math.pow((initialCapital + payment * n) / Math.max(initialCapital, Number.EPSILON), 1 / n) - 1) * 100 : NaN;
                 break;
             case 'npv':
-                // VAN (Valeur Actuelle Nette)
-                result = pv + pmt * ((1 - Math.pow(1 + r, -n)) / r);
+                result = initialCapital + payment * annuityFactor;
                 break;
             case 'roi':
-                // ROI (Return on Investment)
-                result = ((pmt * n - pv) / pv) * 100;
+                result = initialCapital === 0 ? NaN : ((payment * n - initialCapital) / Math.abs(initialCapital)) * 100;
                 break;
             case 'compound':
-                // Intérêts composés
-                result = pv * Math.pow(1 + r, n);
+                result = initialCapital * Math.pow(1 + r, n);
                 break;
             case 'simple':
-                // Intérêts simples
-                result = pv * (1 + r * n);
+                result = initialCapital * (1 + r * n);
                 break;
+            default:
+                result = NaN;
         }
-        
-        this.finInput.value = this.formatNumber(result);
-        this.addToHistory(`Fin: ${func.toUpperCase()} = ${this.formatNumber(result)}`);
+
+        if (!Number.isFinite(result)) {
+            this.finInput.value = 'Erreur';
+            this.showNotification('Paramètres financiers incompatibles ou incomplets.');
+            return;
+        }
+
+        const formattedResult = this.formatNumber(result);
+        this.finInput.value = formattedResult;
+        this.addToHistory(`Fin: ${func.toUpperCase()} = ${formattedResult}`);
     }
 
     // Méthodes de conversion
@@ -608,7 +713,7 @@ class Calculator {
         };
         
         const conv = conversions[type];
-        if (!conv) return value;
+        if (!conv || !(fromUnit in conv) || !(toUnit in conv)) return value;
         
         if (type === 'temperature') {
             // Conversion spéciale pour la température
@@ -744,18 +849,31 @@ class Calculator {
             case 'floor': result = Math.floor(value); break;
             case 'ceil': result = Math.ceil(value); break;
             case 'round': result = Math.round(value); break;
-            case 'pow': 
+            case 'pow':
                 this.sciExpression += '^';
                 this.sciInput.value += '^';
                 return;
+            case 'clear':
+                this.handleScientificKeyPress('C');
+                return;
+            case 'equals':
+                this.calculateScientific();
+                return;
         }
-        
+
+        if (!Number.isFinite(result)) {
+            this.sciInput.value = 'Erreur';
+            this.sciExpression = '';
+            this.showNotification('Cette fonction ne peut pas être appliquée à la valeur saisie.');
+            return;
+        }
+
         this.sciInput.value = this.formatNumber(result);
         this.sciExpression = this.sciInput.value;
     }
 
     factorial(n) {
-        if (n < 0) return NaN;
+        if (!Number.isInteger(n) || n < 0 || n > 170) return NaN;
         if (n === 0 || n === 1) return 1;
         let result = 1;
         for (let i = 2; i <= n; i++) {
@@ -787,27 +905,45 @@ class Calculator {
     }
 
     setTheme(theme) {
-        if (theme === 'auto') {
-            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('calculator-theme', theme);
-        
+        const requestedTheme = ['auto', 'light', 'dark'].includes(theme) ? theme : 'auto';
+        const resolvedTheme = requestedTheme === 'auto'
+            ? (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : requestedTheme;
+
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        localStorage.setItem('calculator-theme', requestedTheme);
+
+        const themeSelector = document.querySelector('#theme-selector');
+        if (themeSelector) themeSelector.value = requestedTheme;
+
         const themeToggle = document.querySelector('#theme-toggle i');
         if (themeToggle) {
-            themeToggle.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            themeToggle.className = resolvedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
     }
 
     // Méthodes de gestion des modes
     switchMode(mode) {
+        const validModes = ['standard', 'scientific', 'financial', 'converter'];
+        if (!validModes.includes(mode)) return;
+
         this.currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(button => {
+            const isActive = button.dataset.mode === mode;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-selected', String(isActive));
+        });
+        document.querySelectorAll('.calculator-mode').forEach(panel => {
+            const isActive = panel.id === `${mode}-mode`;
+            panel.classList.toggle('active', isActive);
+            panel.setAttribute('aria-hidden', String(!isActive));
+        });
         this.updateModeDisplay();
     }
 
     updateModeDisplay() {
-        console.log(`Mode switched to: ${this.currentMode}`);
+        const activePanel = document.querySelector(`#${this.currentMode}-mode`);
+        if (activePanel) activePanel.focus?.({ preventScroll: true });
     }
 
     // Méthodes d'historique
@@ -835,11 +971,17 @@ class Calculator {
         if (!this.historyList) return;
         
         this.historyList.innerHTML = this.history.map(item => `
-            <div class="history-item" data-id="${item.id}">
-                <div class="history-entry">${item.entry}</div>
-                <div class="history-timestamp">${item.timestamp}</div>
+            <div class="history-item" data-id="${this.escapeHtml(item.id)}">
+                <div class="history-entry">${this.escapeHtml(item.entry)}</div>
+                <div class="history-timestamp">${this.escapeHtml(item.timestamp)}</div>
             </div>
         `).join('');
+    }
+
+    escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>'"]/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[character]));
     }
 
     clearHistory() {
@@ -858,7 +1000,7 @@ class Calculator {
 
     // Méthodes de graphiques
     initializeChart() {
-        if (!this.historyChart) return;
+        if (!this.historyChart || typeof Chart === 'undefined') return;
         
         const ctx = this.historyChart.getContext('2d');
         this.chart = new Chart(ctx, {
@@ -920,38 +1062,46 @@ class Calculator {
     }
 
     loadSettings() {
-        const savedTheme = localStorage.getItem('calculator-theme') || 'auto';
-        const savedPrecision = localStorage.getItem('calculator-precision') || '2';
+        const storedTheme = localStorage.getItem('calculator-theme');
+        const savedTheme = ['auto', 'light', 'dark'].includes(storedTheme) ? storedTheme : 'auto';
+        const parsedPrecision = Number.parseInt(localStorage.getItem('calculator-precision') || '2', 10);
+        const savedPrecision = Number.isInteger(parsedPrecision) ? Math.min(10, Math.max(0, parsedPrecision)) : 2;
         const savedAnimations = localStorage.getItem('calculator-animations') !== 'false';
-        
+
         this.setTheme(savedTheme);
-        
+        document.documentElement.classList.toggle('animations-disabled', !savedAnimations);
+
         const precisionInput = document.querySelector('#decimal-precision');
-        if (precisionInput) precisionInput.value = savedPrecision;
-        
+        if (precisionInput) precisionInput.value = String(savedPrecision);
+
         const animationsInput = document.querySelector('#animations-enabled');
         if (animationsInput) animationsInput.checked = savedAnimations;
-        
+
         const themeSelector = document.querySelector('#theme-selector');
         if (themeSelector) themeSelector.value = savedTheme;
-        
-        CONFIG.decimalPrecision = parseInt(savedPrecision);
+
+        CONFIG.decimalPrecision = savedPrecision;
         CONFIG.animationsEnabled = savedAnimations;
     }
 
     saveSettings() {
-        const precision = document.querySelector('#decimal-precision')?.value || '2';
-        const animations = document.querySelector('#animations-enabled')?.checked || true;
-        const theme = document.querySelector('#theme-selector')?.value || 'auto';
-        
-        localStorage.setItem('calculator-precision', precision);
-        localStorage.setItem('calculator-animations', animations);
+        const precisionInput = document.querySelector('#decimal-precision');
+        const parsedPrecision = Number.parseInt(precisionInput?.value ?? '2', 10);
+        const precision = Number.isInteger(parsedPrecision) ? Math.min(10, Math.max(0, parsedPrecision)) : 2;
+        const animations = document.querySelector('#animations-enabled')?.checked ?? true;
+        const themeSelector = document.querySelector('#theme-selector');
+        const theme = ['auto', 'light', 'dark'].includes(themeSelector?.value) ? themeSelector.value : 'auto';
+
+        localStorage.setItem('calculator-precision', String(precision));
+        localStorage.setItem('calculator-animations', String(animations));
         localStorage.setItem('calculator-theme', theme);
-        
-        CONFIG.decimalPrecision = parseInt(precision);
+
+        CONFIG.decimalPrecision = precision;
         CONFIG.animationsEnabled = animations;
+        document.documentElement.classList.toggle('animations-disabled', !animations);
+        if (precisionInput) precisionInput.value = String(precision);
         this.setTheme(theme);
-        
+
         this.showNotification('Paramètres sauvegardés !');
     }
 
@@ -970,22 +1120,24 @@ class Calculator {
     }
 
     loadState() {
-    const saved = localStorage.getItem('calculator-state');
-    if (saved) {
-        const state = JSON.parse(saved);
-            
+        const saved = localStorage.getItem('calculator-state');
+        if (!saved) {
+            this.showNotification('Aucune sauvegarde trouvée.');
+            return;
+        }
+
+        try {
+            const state = JSON.parse(saved);
             if (this.operand1) this.operand1.value = state.operand1 || '0';
             if (this.operand2) this.operand2.value = state.operand2 || '0';
             this.selectedOperator = state.operator || '+';
-            this.currentMode = state.mode || 'standard';
-            
+
             this.updateOperatorButtons();
-            this.switchMode(this.currentMode);
-            
+            this.switchMode(state.mode || 'standard');
             this.calculateStandard();
             this.showNotification('État restauré avec succès !');
-            } else {
-            this.showNotification('Aucune sauvegarde trouvée.');
+        } catch (error) {
+            this.showNotification('La sauvegarde est illisible.');
         }
     }
 
@@ -995,11 +1147,18 @@ class Calculator {
 
     loadHistory() {
         const saved = localStorage.getItem('calculator-history');
-        if (saved) {
-            this.history = JSON.parse(saved);
-            this.updateHistoryDisplay();
-            this.updateHistoryChart();
+        if (!saved) return;
+
+        try {
+            const parsedHistory = JSON.parse(saved);
+            this.history = Array.isArray(parsedHistory) ? parsedHistory.slice(0, CONFIG.maxHistoryItems) : [];
+        } catch (error) {
+            this.history = [];
+            localStorage.removeItem('calculator-history');
         }
+
+        this.updateHistoryDisplay();
+        this.updateHistoryChart();
     }
 
     // Méthodes d'export/import
@@ -1021,17 +1180,27 @@ class Calculator {
         this.showNotification('Données exportées avec succès !');
     }
 
-    shareCalculator() {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Calculatrice Pro ESIEA',
-                text: 'Découvrez ma calculatrice professionnelle développée avec les dernières technologies !',
-                url: window.location.href
-            });
-        } else {
-            // Fallback pour les navigateurs qui ne supportent pas l'API Share
-            navigator.clipboard.writeText(window.location.href);
-            this.showNotification('Lien copié dans le presse-papiers !');
+    async shareCalculator() {
+        const shareData = {
+            title: 'Calculatrice Pro ESIEA',
+            text: 'Découvrez ma calculatrice professionnelle développée avec les dernières technologies !',
+            url: window.location.href
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+                this.showNotification('Lien partagé !');
+            } else if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(window.location.href);
+                this.showNotification('Lien copié dans le presse-papiers !');
+            } else {
+                throw new Error('Partage indisponible');
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                this.showNotification('Le partage n’est pas disponible dans ce navigateur.');
+            }
         }
     }
 
@@ -1255,9 +1424,13 @@ class Calculator {
         if (this.resultElt) this.resultElt.textContent = '0';
         if (this.sciInput) this.sciInput.value = '0';
         this.sciExpression = '';
+        this.sciResult = 0;
         if (this.finInput) this.finInput.value = '0';
         if (this.converterInputs.fromValue) this.converterInputs.fromValue.value = '0';
         if (this.converterInputs.toValue) this.converterInputs.toValue.value = '0';
+        this.currentField = this.operand1;
+        this.selectedOperator = '+';
+        this.updateOperatorButtons();
     }
 
     showNotification(message) {

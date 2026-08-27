@@ -6,11 +6,12 @@ class AdvancedFeatures {
     }
 
     initializeAdvancedFeatures() {
-        this.addKeyboardShortcuts();
-        this.addVoiceCommands();
+        // Les raccourcis et la voix sont gérés par Calculator pour éviter les doubles événements.
         this.addGestureSupport();
         this.addAdvancedAnimations();
-        this.addPerformanceMonitoring();
+        if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            this.addPerformanceMonitoring();
+        }
     }
 
     // Raccourcis clavier avancés
