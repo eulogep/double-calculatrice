@@ -30,7 +30,7 @@
         "@semantic-release/release-notes-generator": "^14.1.1",
         "eslint": "^10.9.1",
         "globals": "^17.11.0",
-        "jest": "^30.4.2",
+        "jest": "^30.5.0",
         "prettier": "^3.9.6",
         "semantic-release": "^25.0.9"
     }
